@@ -1,6 +1,6 @@
 FLAGS = -Wall -lm
 
-main: lab1.c lectura.o funciones.o resultados.o
+main: lab2.c lectura.o funciones.o resultados.o
 	gcc $(FLAGS) -o main lab1.c lectura.o funciones.o resultados.o
 
 lectura.o: lectura.h lectura.c estructuras.h

@@ -8,11 +8,17 @@ include_directories(.)
 
 
 add_executable(SISTOPE_LAB1_1_2024
-        LAB/lab1.c
+        LAB/lab2.c
         LAB/funciones.c
         LAB/lectura.c
         LAB/lectura.h
         LAB/funciones.h
         LAB/estructuras.h
         LAB/resultados.h
-        LAB/resultados.c)
+        LAB/resultados.c
+        LAB/broker.c
+        LAB/worker.c
+        LAB/fworker.c
+        LAB/fbroker.c
+        LAB/fbroker.h
+        LAB/fworker.h)

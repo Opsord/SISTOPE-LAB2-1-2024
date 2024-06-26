@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     float factor_saturacion = 1.3;
     float umbral_binarizacion = 0.5;
     float umbral_clasificacion = 0.5;
+    float cantidad_workers = 1;
     char *nombre_carpeta = NULL;
     char *nombre_archivo_csv = NULL;
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
     printf("FUNCIONA\n");
 
     // Procesar las opciones
-    while ((option = getopt(argc, argv, "N:f:p:u:v:C:R:")) != -1)
+    while ((option = getopt(argc, argv, "N:f:p:u:v:C:R:W:")) != -1)
     {
         switch (option)
         {
@@ -61,6 +62,10 @@ int main(int argc, char *argv[])
         case 'R':
             nombre_archivo_csv = optarg;
             break;
+            // W es para la cantidad de workers
+        case 'W':
+            cantidad_workers = atof(optarg);
+            break;
         default:
             printf("Opción desconocida: %c\n", option);
             return 1;
@@ -78,14 +83,14 @@ int main(int argc, char *argv[])
         return 1;
     }
     printf("Imagen leída\n");
-    // Imprimir la información de la imagen
+    // Impresión de la información de la imagen
     printf("Ancho: %d\n", imagen->width);
     printf("Alto: %d\n", imagen->height);
 
-    // Ahora se aplican los filtros
+    // Aplicación de filtros
     char output_filename[256];
 
-    // Ahora crear el directorio con los resultados
+    // Creación de la carpeta para los resultados
     if (create_directory(nombre_carpeta) == 1)
     {
         printf("Error al crear el directorio\n");
