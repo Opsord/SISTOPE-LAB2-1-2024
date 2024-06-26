@@ -1,34 +1,11 @@
-# Prerequisites
-*.d
-
-# Object files
+# Archivos objeto
 *.o
 *.ko
 *.obj
 *.elf
 
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
+# Archivos binarios
+*.bin
 *.exe
 *.out
 *.app
@@ -36,17 +13,42 @@
 *.x86_64
 *.hex
 
-# Debug files
+# Archivos de depuración
 *.dSYM/
 *.su
 *.idb
 *.pdb
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+# Archivos de configuración del sistema de compilación
+*.d
+*.dep
+*.hdep
+
+# Archivos temporales
+*.log
+*.swp
+*.bak
+*~
+
+# Archivos generados por CLion
+.idea/
+
+# Archivos generados por CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
+cmake-build-debug/*
+
+# Archivos generados por el sistema
+.DS_Store
+
+# Archivos de build
+build/*
+
+# Ejecutables
+LAB/main
+
+# Archivos de resultados
+supercarpeta/*
+superresultados
