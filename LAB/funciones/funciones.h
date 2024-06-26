@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "estructuras.h"
+#include "../estructuras.h"
 
 // Function prototypes
 BMPImage* saturate_bmp(BMPImage* image, float factor);

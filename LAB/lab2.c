@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "lectura.h"
-#include "funciones.h"
+#include "funciones/funciones.h"
 #include "resultados.h"
 
 // Entradas: Argumentos de línea de comandos
