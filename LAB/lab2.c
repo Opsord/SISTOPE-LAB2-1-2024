@@ -2,17 +2,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <dbghelp.h>
 
-#include "lectura.h"
-#include "funciones/funciones.h"
-#include "resultados.h"
+#include "lectura/lectura.h"
+#include "filtros/filtros.h"
+#include "resultados/resultados.h"
 
 // Entradas: Argumentos de línea de comandos
 // Salidas: Estado de finalización del programa (0 si es exitoso, 1 si hay un error)
 // Descripción: Lee una imagen BMP, aplica varios filtros y escribe los resultados en archivos separados
 int main(int argc, char *argv[])
 {
-    // Variables para las opciones
+    // Variables para las opciones y sus valores por defecto
     char *nombre_prefijo = NULL;
     int cantidad_filtros = 3;
     float factor_saturacion = 1.3;
@@ -27,7 +28,7 @@ int main(int argc, char *argv[])
     printf("FUNCIONA\n");
 
     // Procesar las opciones
-    while ((option = getopt(argc, argv, "N:f:p:u:v:C:R:W:")) != -1)
+    while ((option = getopt(argc, argv, "N:f:p:u:v:C:R:w:")) != -1)
     {
         switch (option)
         {
@@ -62,8 +63,8 @@ int main(int argc, char *argv[])
         case 'R':
             nombre_archivo_csv = optarg;
             break;
-            // W es para la cantidad de workers
-        case 'W':
+            // w es para la cantidad de workers
+        case 'w':
             cantidad_workers = atof(optarg);
             break;
         default:
@@ -72,22 +73,14 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Primero va la lectura de la imagen
-    char nombre_archivo[256];
-    sprintf(nombre_archivo, "%s%s", nombre_prefijo, ".bmp");
-    // Ahora se llama a la lectura
-    BMPImage *imagen = read_bmp(nombre_archivo);
-    if (imagen == NULL)
-    {
-        printf("Error al leer la imagen\n");
-        return 1;
-    }
-    printf("Imagen leída\n");
-    // Impresión de la información de la imagen
-    printf("Ancho: %d\n", imagen->width);
-    printf("Alto: %d\n", imagen->height);
+    // ------------------- Creación de variables -------------------
 
-    // Aplicación de filtros
+    // Creation de variable para el nombre del archivo
+    char nombre_archivo[256];
+    // Creación del nombre del archivo
+    sprintf(nombre_archivo, "%s%s", nombre_prefijo, ".bmp");
+
+    // Creación de la variable para el nombre del archivo de salida
     char output_filename[256];
 
     // Creación de la carpeta para los resultados
@@ -96,8 +89,33 @@ int main(int argc, char *argv[])
         printf("Error al crear el directorio\n");
     }
 
-    // Los filtros se utilizan en orden
-    // Si se llama 1, se llama el primero no más
+    // ------------------- Lectura de la imagen -------------------
+
+    // Llamada a la función de lectura de la imagen
+    BMPImage *imagen = read_bmp(nombre_archivo);
+    // Verificación de la lectura de la imagen
+    if (imagen == NULL)
+    {
+        printf("Error al leer la imagen\n");
+        return 1;
+    }
+    // Resultado de la lectura de la imagen
+    printf("Imagen leída\n");
+    // Impresión de la información de la imagen
+    printf("Ancho: %d\n", imagen->width);
+    printf("Alto: %d\n", imagen->height);
+
+    // ------------------- Llamado al broker -------------------
+
+    // Llamado al broker
+    void procesar_imagen(int ancho, int alto, int cantidad_workers) {
+        int total_pixeles = ancho * alto;
+        dividir_trabajo_entre_workers(total_pixeles, cantidad_workers);
+    }
+
+
+    // ------------------- Aplicación de los filtros -------------------
+
     if (cantidad_filtros == 1)
     {
         // Saturación
@@ -111,7 +129,7 @@ int main(int argc, char *argv[])
         // Imprimir la información de la imagen
         printf("Ancho: %d\n", imagen_saturada->width);
         printf("Alto: %d\n", imagen_saturada->height);
-        // Imprimir informacion del header
+        // Imprimir información del header
 
         printf("Imagen saturada\n");
         write_bmp(output_filename, imagen_saturada);
@@ -179,11 +197,13 @@ int main(int argc, char *argv[])
         write_bmp(output_filename, imagen_binaria);
     }
 
-    // Ahora clasificación - Se aplica siempre
+    // ------------------- Clasificación -------------------
+
     bool clasificacion = is_nearly_black(imagen, umbral_clasificacion);
     printf("Clasificación: %d\n", clasificacion);
 
-    // Ahora crear el archivo CSV
+    // ------------------- Creación del archivo CSV -------------------
+
     if (create_csv(nombre_archivo_csv, nombre_archivo, clasificacion) == 1)
     {
         printf("Error al crear el archivo CSV\n");

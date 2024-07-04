@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "funciones.h"
+#include "filtros.h"
 
 // Entradas: Una imagen BMP y un factor de saturación
 // Salidas: Una nueva imagen BMP saturada
@@ -12,7 +12,7 @@ BMPImage* saturate_bmp(BMPImage* image, float factor) {
     // Asignar memoria para la nueva imagen
     BMPImage* new_image = (BMPImage*)malloc(sizeof(BMPImage));
     if (!new_image) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para la nueva imagen.\n");
+        fprintf(stderr, "Error: No se pudo asignar memoria para la nueva imagen saturada.\n");
         return NULL;
     }
     // Copiar el ancho y alto de la imagen original
@@ -20,7 +20,7 @@ BMPImage* saturate_bmp(BMPImage* image, float factor) {
     new_image->height = image->height;
     new_image->data = (Pixel*)malloc(sizeof(Pixel) * image->width * image->height);
     if (!new_image->data) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para los datos de la nueva imagen.\n");
+        fprintf(stderr, "Error: No se pudo asignar memoria para los datos de la nueva imagen saturada.\n");
         free(new_image);
         return NULL;
     }
@@ -48,7 +48,7 @@ BMPImage* grayscale_bmp(BMPImage* image) {
     // Asignar memoria para la nueva imagen
     BMPImage* new_image = (BMPImage*)malloc(sizeof(BMPImage));
     if (!new_image) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para la nueva imagen.\n");
+        fprintf(stderr, "Error: No se pudo asignar memoria para la nueva imagen en escala de grises.\n");
         return NULL;
     }
     // Copiar el ancho y alto de la imagen original
@@ -56,7 +56,7 @@ BMPImage* grayscale_bmp(BMPImage* image) {
     new_image->height = image->height;
     new_image->data = (Pixel*)malloc(sizeof(Pixel) * image->width * image->height);
     if (!new_image->data) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para los datos de la nueva imagen.\n");
+        fprintf(stderr, "Error: No se pudo asignar memoria para los datos de la nueva imagen en escala de grises.\n");
         free(new_image);
         return NULL;
     }
@@ -64,7 +64,7 @@ BMPImage* grayscale_bmp(BMPImage* image) {
     for (int y = 0; y < image->height; y++) {
         for (int x = 0; x < image->width; x++) {
             Pixel pixel = image->data[y * image->width + x];
-            // Se altera el valor de cada componente RGB aplicandole un factor
+            // Se altera el valor de cada componente RGB aplicándole un factor
             // Pixel = (R*0.3) + (G*0.59) + (B*0.11)
             // (se convierte el resultado a unsigned char para que el valor esté en el rango [0, 255])
             unsigned char gray = (unsigned char)(pixel.r * 0.3 + pixel.g * 0.59 + pixel.b * 0.11);
@@ -84,7 +84,7 @@ BMPImage* binary_bmp(BMPImage* image, float threshold) {
     // Asignar memoria para la nueva imagen
     BMPImage *new_image = (BMPImage *) malloc(sizeof(BMPImage));
     if (!new_image) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para la nueva imagen.\n");
+        fprintf(stderr, "Error: No se pudo asignar memoria para la nueva imagen binarizada.\n");
         return NULL;
     }
     // Copiar el ancho y alto de la imagen original
@@ -92,7 +92,7 @@ BMPImage* binary_bmp(BMPImage* image, float threshold) {
     new_image->height = image->height;
     new_image->data = (Pixel *) malloc(sizeof(Pixel) * image->width * image->height);
     if (!new_image->data) {
-        fprintf(stderr, "Error: No se pudo asignar memoria para los datos de la nueva imagen.\n");
+        fprintf(stderr, "Error: No se pudo asignar memoria para los datos de la nueva imagen binarizada.\n");
         free(new_image);
         return NULL;
     }
@@ -119,30 +119,31 @@ BMPImage* binary_bmp(BMPImage* image, float threshold) {
         }
     }
     return new_image;
-    }
+}
 
-    // Entradas: Una imagen BMP y un umbral
-    // Salidas: Un booleano que indica si la imagen es casi negra o no
-    // Descripción: Clasifica una imagen BMP como casi negra o no, contando los píxeles negros y comparándolos con un umbral
-    bool is_nearly_black(BMPImage* image, float threshold) {
-        int black_pixels = 0; // Contador de pixeles negros
-        int total_pixels = image->width * image->height; // Contador de pixeles en total
+// Entradas: Una imagen BMP y un umbral
+// Salidas: Un booleano que indica si la imagen es casi negra o no
+// Descripción: Clasifica una imagen BMP como casi negra o no, contando los píxeles negros y comparándolos con un umbral
+bool is_nearly_black(BMPImage* image, float threshold) {
+    int black_pixels = 0; // Contador de pixeles negros
+    int total_pixels = image->width * image->height; // Contador de pixeles en total
 
-        // Recorrer todos los píxeles de la imagen
-        for (int y = 0; y < image->height; y++) { // Para cada posición de los pixeles
-            for (int x = 0; x < image->width; x++) {
-                Pixel pixel = image->data[y * image->width + x]; // Tomaremos dicho pixel
-                // Verificar si el píxel es negro
-                if (pixel.r == 0  && pixel.g == 0 && pixel.b == 0) {
+    // Recorrer todos los píxeles de la imagen
+    for (int y = 0; y < image->height; y++) { // Para cada posición de los píxeles
+        for (int x = 0; x < image->width; x++) {
+            Pixel pixel = image->data[y * image->width + x]; // Tomaremos dicho pixel
+            // Verificar si el píxel es negro
+            if (pixel.r == 0  && pixel.g == 0 && pixel.b == 0) {
                     black_pixels++; // En caso de ser un pixel negro, lo contamos
-                }
             }
         }
-
-        // Calcular el porcentaje de píxeles negros
-        float black_percentage = (float)black_pixels / total_pixels; // Queremos el porcentaje de pixeles negros con respecto al total
-        printf("el porcentaje es %f\n", black_percentage);
-
-        // Comparar el porcentaje con el umbral
-        return black_percentage >= threshold;
     }
+
+    // Calcular el porcentaje de píxeles negros
+    float black_percentage = (float)black_pixels / total_pixels; // Queremos el porcentaje de pixeles negros con respecto al total
+    printf("el porcentaje es %f\n", black_percentage);
+
+    // Comparar el porcentaje con el umbral
+    return black_percentage >= threshold;
+}
+

@@ -1,13 +1,11 @@
-//
-// Created by ivang on 27/06/2024.
-//
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "estructuras.h"
-#include "fworker.h"
+#include "../estructuras.h"
+#include "fbroker.h"
+#include "LAB/worker/fworker.h"
 
 // Function to split image and apply filter
 BMPImage* split(int num, BMPImage *image) {
@@ -31,7 +29,7 @@ int compare_worker_id(const void *a, const void *b) {
 // Function to merge image parts
 // Function to merge image parts from all workers
 BMPImage* merge_all(Worker* workers, int num_workers, BMPImage* (*get_image)(Worker*)) {
-    // Calculate total number of parts
+    // Calculate the total number of parts
     int total_parts = num_workers;
 
     // Allocate memory for the merged image

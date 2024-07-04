@@ -1,6 +1,3 @@
-//
-// Created by ivang on 27/06/2024.
-//
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +6,10 @@
 #include "estructuras.h"
 #include "fworker.h"
 
-int main(){
+// Incluir bibliotecas para comunicación IPC
 
+int main() {
+    // Realizar la tarea asignada
+    // Devolver el resultado a broker
+    return 0;
 }

@@ -102,7 +102,7 @@ void free_bmp(BMPImage *image)
     }
 }
 
-// funcion para guardar la imagen en un archivo
+// Guardar la imagen en un archivo
 void write_bmp(const char *filename, BMPImage *image)
 {
     // Se abre el archivo en modo escritura binaria

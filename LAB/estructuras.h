@@ -5,7 +5,7 @@
 
 #pragma pack(push, 1)
 typedef struct {
-    // Definición de la estructura BMP Header (Informacion del archivo)
+    // Definición de la estructura BMP Header (Información del archivo)
     uint16_t type;              // Tipo de dato, indica si el archivo es BMP a través de las siglas BM
     uint32_t size;              // Tamaño del archivo
     uint16_t reserved1;         // Reservado
@@ -13,7 +13,7 @@ typedef struct {
     uint32_t offset;            // Offset, indica la posición en bytes donde comienza la información de la imagen
 } BMPHeader;
 
-// Definición de la estructura BMP Info Header (Informacion de la imagen contenida en el archivo)
+// Definición de la estructura BMP Info Header (Información de la imagen contenida en el archivo)
 typedef struct {
     uint32_t size_info;         // Tamaño de la información de la imagen (info header)
     int32_t width;              // Ancho de la imagen
