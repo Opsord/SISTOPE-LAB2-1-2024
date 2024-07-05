@@ -1,10 +1,20 @@
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "estructuras.h"
 #include "fworker.h"
+#include "LAB/estructuras.h"
+#include "LAB/filtros/filtros.h"
+
+// Función para aplicar los filtros a la imagen
+
+
+
+
+
+
+
+
 
 Worker pipeline(Worker* worker, int num_filters, int factor_saturacion, int umbral_binarizacion){
     // Split the image into parts

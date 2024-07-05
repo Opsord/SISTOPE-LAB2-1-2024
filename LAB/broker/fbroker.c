@@ -1,11 +1,65 @@
-#include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "../estructuras.h"
-#include "fbroker.h"
+#include "LAB/estructuras.h"
 #include "LAB/worker/fworker.h"
+
+// Función para dividir la imagen en imágenes más pequeñas matricialmente
+
+// Calcular el número de columnas que le corresponderá a cada worker de forma equitativa
+// dividiendo el ancho total de la imagen (M) entre el número de workers.
+
+// Calcular el resto de esta división para saber cuántas columnas adicionales debe manejar el último worker.
+
+// Para cada worker, excepto el último, asignarle el número equitativo de columnas calculado en el paso 1.
+
+// Al último worker, asignarle el número equitativo de columnas más el resto calculado en el paso 2.
+
+// Para cada worker, crear una sub-imagen con las columnas que le corresponden y asignar los
+// datos de píxeles adecuados de la imagen original.
+
+void divide_image_for_workers(BMPImage* original, int num_workers) {
+    int total_columns = original->width;
+    int columns_per_worker = total_columns / num_workers;
+    int extra_columns = total_columns % num_workers;
+
+    for (int i = 0; i < num_workers; i++) {
+        int worker_columns = columns_per_worker + (i == num_workers - 1 ? extra_columns : 0);
+        BMPImage worker_image;
+        worker_image.width = worker_columns;
+        worker_image.height = original->height;
+        worker_image.data = malloc(worker_columns * original->height * sizeof(Pixel));
+
+        for (int y = 0; y < original->height; y++) {
+            for (int x = 0; x < worker_columns; x++) {
+                int originalX = x + (i * columns_per_worker);
+                if (i == num_workers - 1 && x >= columns_per_worker) {
+                    originalX += extra_columns - columns_per_worker;
+                }
+                int originalIndex = y * original->width + originalX;
+                int workerIndex = y * worker_columns + x;
+                worker_image.data[workerIndex] = original->data[originalIndex];
+            }
+        }
+
+        // Aquí deberías guardar o procesar la sub-imagen worker_image como sea necesario
+        // Por ejemplo, podrías escribir la sub-imagen a un archivo o enviarla a un worker para su procesamiento
+        // No olvides liberar la memoria de worker_image.data cuando ya no sea necesaria
+    }
+}
+
+// Función para asignar partes de una imagen a un worker
+
+// Esperar que los workers completen su trabajo
+
+// Función para comparar los ids de los workers para qsort
+
+// Función para unir las partes de una imagen de todos los workers
+
+
+
+
+
 
 // Function to split image and apply filter
 BMPImage* split(int num, BMPImage *image) {
@@ -50,5 +104,3 @@ BMPImage* merge_all(Worker* workers, int num_workers, BMPImage* (*get_image)(Wor
 
     return merged;
 }
-
-
