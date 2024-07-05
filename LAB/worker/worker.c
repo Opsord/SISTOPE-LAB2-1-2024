@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Incluir bibliotecas para comunicación IPC
+#include "fworker.h"
 
 int main() {
 

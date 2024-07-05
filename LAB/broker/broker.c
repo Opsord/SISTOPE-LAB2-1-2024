@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Incluir bibliotecas para la creación de procesos y comunicación IPC
+#include "fbroker.h"
 
 int main(int argc, char *argv[]) {
 
