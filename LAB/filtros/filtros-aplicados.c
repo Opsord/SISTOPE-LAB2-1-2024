@@ -3,5 +3,5 @@
 #include <string.h>
 
 #include "filtros.h"
-#include "../estructuras.h"
+#include "LAB/estructuras.h"
 #include "LAB/lectura/lectura.h"

@@ -1,10 +1,10 @@
-#ifndef SISTOPE_LAB1_1_2024_FBROKER_H
-#define SISTOPE_LAB1_1_2024_FBROKER_H
+#ifndef SISTOPE_LAB2_1_2024_FBROKER_H
+#define SISTOPE_LAB2_1_2024_FBROKER_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-class fbroker{
+#include "LAB/estructuras.h"
 
-};
-
-
-#endif //SISTOPE_LAB1_1_2024_FBROKER_H
+#endif // SISTOPE_LAB2_1_2024_FBROKER_H

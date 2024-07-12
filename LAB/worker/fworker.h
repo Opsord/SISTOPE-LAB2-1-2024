@@ -1,7 +1,7 @@
 #ifndef SISTOPE_LAB2_1_2024_FWORKER_H
 #define SISTOPE_LAB2_1_2024_FWORKER_H
 
-#include "../estructuras.h"
+#include "LAB/estructuras.h"
 #include "LAB/filtros/filtros.h"
 
 typedef struct {

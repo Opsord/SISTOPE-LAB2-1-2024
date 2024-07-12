@@ -1,10 +1,6 @@
 #ifndef FILTROS_H
 #define FILTROS_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-
 #include "../estructuras.h"
 
 // Entrada: estructura BMPImage con la información de la imagen y un factor de saturación

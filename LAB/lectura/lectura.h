@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "../estructuras.h"
+#include "LAB/estructuras.h"
 
 // Entrada: nombre de un archivo BMP
 // Salida: estructura BMPImage con la información de la imagen
