@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     // Variable para getopt
     int option;
-    printf("FUNCIONA\n");
+    printf("Proceso main iniciado\n");
 
     // Procesar las opciones
     while ((option = getopt(argc, argv, "N:f:p:u:v:C:R:w:")) != -1)
@@ -107,12 +107,7 @@ int main(int argc, char *argv[])
 
     // ------------------- Llamado al broker -------------------
 
-    // Llamado al broker
-    void procesar_imagen(int ancho, int alto, int cantidad_workers) {
-        int total_pixeles = ancho * alto;
-        dividir_trabajo_entre_workers(total_pixeles, cantidad_workers);
-    }
-
+    // Llamado al broker con la cantidad de workers, la imagen y los filtros a aplicar
 
     // ------------------- Aplicación de los filtros -------------------
 

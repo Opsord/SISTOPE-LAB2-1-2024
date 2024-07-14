@@ -1,0 +1,4 @@
+Comandos:
+
+- Hacer el build de prueba desde la carpeta de build
+sudo cmake -S ../ -B .

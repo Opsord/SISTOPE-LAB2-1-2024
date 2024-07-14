@@ -1,9 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
-project(SISTOPE_LAB2_1_2024 C)
-
-set(CMAKE_C_STANDARD 11)
-
-include_directories(.)
+CMake normal:
 
 add_executable(${PROJECT_NAME}
         LAB/lab2.c
@@ -22,3 +17,11 @@ add_executable(${PROJECT_NAME}
         LAB/worker/fworker.h
         LAB/filtros/filtros-aplicados.c
         )
+
+CMake procesos pruebas:
+
+add_executable(${PROJECT_NAME}
+        Pruebas/proceso-pruebas.c
+        Pruebas/proceso-pruebas-2.c
+        )
+
