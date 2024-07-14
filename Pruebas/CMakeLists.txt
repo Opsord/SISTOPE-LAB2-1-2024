@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(LAB_PRUEBAS C)
+project(PRUEBA C)
 
 set(CMAKE_C_STANDARD 11)
 

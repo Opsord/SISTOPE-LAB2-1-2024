@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas"
+CMAKE_SOURCE_DIR = /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas/build"
+CMAKE_BINARY_DIR = /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas/build/CMakeFiles" "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas/build//CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas/build/CMakeFiles /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named LAB_PRUEBAS
+# Target rules for targets named PRUEBA
 
 # Build rule for target.
-LAB_PRUEBAS: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 LAB_PRUEBAS
-.PHONY : LAB_PRUEBAS
+PRUEBA: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PRUEBA
+.PHONY : PRUEBA
 
 # fast build rule for target.
-LAB_PRUEBAS/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/LAB_PRUEBAS.dir/build.make CMakeFiles/LAB_PRUEBAS.dir/build
-.PHONY : LAB_PRUEBAS/fast
+PRUEBA/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/build
+.PHONY : PRUEBA/fast
 
 proceso-pruebas-2.o: proceso-pruebas-2.c.o
 .PHONY : proceso-pruebas-2.o
 
 # target to build an object file
 proceso-pruebas-2.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/LAB_PRUEBAS.dir/build.make CMakeFiles/LAB_PRUEBAS.dir/proceso-pruebas-2.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas-2.c.o
 .PHONY : proceso-pruebas-2.c.o
 
 proceso-pruebas-2.i: proceso-pruebas-2.c.i
@@ -142,7 +142,7 @@ proceso-pruebas-2.i: proceso-pruebas-2.c.i
 
 # target to preprocess a source file
 proceso-pruebas-2.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/LAB_PRUEBAS.dir/build.make CMakeFiles/LAB_PRUEBAS.dir/proceso-pruebas-2.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas-2.c.i
 .PHONY : proceso-pruebas-2.c.i
 
 proceso-pruebas-2.s: proceso-pruebas-2.c.s
@@ -150,7 +150,7 @@ proceso-pruebas-2.s: proceso-pruebas-2.c.s
 
 # target to generate assembly for a file
 proceso-pruebas-2.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/LAB_PRUEBAS.dir/build.make CMakeFiles/LAB_PRUEBAS.dir/proceso-pruebas-2.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas-2.c.s
 .PHONY : proceso-pruebas-2.c.s
 
 proceso-pruebas.o: proceso-pruebas.c.o
@@ -158,7 +158,7 @@ proceso-pruebas.o: proceso-pruebas.c.o
 
 # target to build an object file
 proceso-pruebas.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/LAB_PRUEBAS.dir/build.make CMakeFiles/LAB_PRUEBAS.dir/proceso-pruebas.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas.c.o
 .PHONY : proceso-pruebas.c.o
 
 proceso-pruebas.i: proceso-pruebas.c.i
@@ -166,7 +166,7 @@ proceso-pruebas.i: proceso-pruebas.c.i
 
 # target to preprocess a source file
 proceso-pruebas.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/LAB_PRUEBAS.dir/build.make CMakeFiles/LAB_PRUEBAS.dir/proceso-pruebas.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas.c.i
 .PHONY : proceso-pruebas.c.i
 
 proceso-pruebas.s: proceso-pruebas.c.s
@@ -174,7 +174,7 @@ proceso-pruebas.s: proceso-pruebas.c.s
 
 # target to generate assembly for a file
 proceso-pruebas.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/LAB_PRUEBAS.dir/build.make CMakeFiles/LAB_PRUEBAS.dir/proceso-pruebas.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas.c.s
 .PHONY : proceso-pruebas.c.s
 
 # Help Target
@@ -185,7 +185,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... LAB_PRUEBAS"
+	@echo "... PRUEBA"
 	@echo "... proceso-pruebas-2.o"
 	@echo "... proceso-pruebas-2.i"
 	@echo "... proceso-pruebas-2.s"

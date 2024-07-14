@@ -1,13 +1,10 @@
-#include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 
-int main()
+int main2(int numeroCualquiera)
 {
-    // Fork a proceso-pruebas con argumento int 5
-    int pid = fork();
-    if (pid == 0)
-    {
-        execl("proceso-pruebas", "proceso-pruebas", "5", NULL);
-    }
+    printf("Aqui inicia el proceso de prueba 2\n");
+    printf("El número es: %d\n", numeroCualquiera);
+    printf("Aqui termina el proceso de prueba 2\n");
     return 0;
 }
