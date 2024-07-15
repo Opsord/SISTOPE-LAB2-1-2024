@@ -1,6 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "estructuras.h": "c"
     }
 }

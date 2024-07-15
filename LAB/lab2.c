@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <dbghelp.h>
 
 #include "lectura/lectura.h"
 #include "filtros/filtros.h"
