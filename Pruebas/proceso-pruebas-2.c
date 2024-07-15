@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int main2(int numeroCualquiera)
+int main(int numeroCualquiera)
 {
-    printf("Aqui inicia el proceso de prueba 2\n");
+    printf("Aqui inicia el proceso llamado por el proceso hijo\n");
     printf("El número es: %d\n", numeroCualquiera);
-    printf("Aqui termina el proceso de prueba 2\n");
+    printf("Aqui termina el proceso llamado por el proceso hijo\n");
     return 0;
 }

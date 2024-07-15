@@ -7,5 +7,8 @@ include_directories(.)
 
 add_executable(${PROJECT_NAME}
         proceso-pruebas.c
+        )
+
+add_executable(proceso-pruebas-2
         proceso-pruebas-2.c
         )

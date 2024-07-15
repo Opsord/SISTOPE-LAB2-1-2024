@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas
+CMAKE_SOURCE_DIR = "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas/build
+CMAKE_BINARY_DIR = "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas/build/CMakeFiles /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas/build/CMakeFiles" "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas/build//CMakeFiles/progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/opsord/SISTOPE/SISTOPE-LAB2-1-2024/Pruebas/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -129,12 +129,25 @@ PRUEBA/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/build
 .PHONY : PRUEBA/fast
 
+#=============================================================================
+# Target rules for targets named proceso-pruebas-2
+
+# Build rule for target.
+proceso-pruebas-2: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 proceso-pruebas-2
+.PHONY : proceso-pruebas-2
+
+# fast build rule for target.
+proceso-pruebas-2/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proceso-pruebas-2.dir/build.make CMakeFiles/proceso-pruebas-2.dir/build
+.PHONY : proceso-pruebas-2/fast
+
 proceso-pruebas-2.o: proceso-pruebas-2.c.o
 .PHONY : proceso-pruebas-2.o
 
 # target to build an object file
 proceso-pruebas-2.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas-2.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proceso-pruebas-2.dir/build.make CMakeFiles/proceso-pruebas-2.dir/proceso-pruebas-2.c.o
 .PHONY : proceso-pruebas-2.c.o
 
 proceso-pruebas-2.i: proceso-pruebas-2.c.i
@@ -142,7 +155,7 @@ proceso-pruebas-2.i: proceso-pruebas-2.c.i
 
 # target to preprocess a source file
 proceso-pruebas-2.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas-2.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proceso-pruebas-2.dir/build.make CMakeFiles/proceso-pruebas-2.dir/proceso-pruebas-2.c.i
 .PHONY : proceso-pruebas-2.c.i
 
 proceso-pruebas-2.s: proceso-pruebas-2.c.s
@@ -150,7 +163,7 @@ proceso-pruebas-2.s: proceso-pruebas-2.c.s
 
 # target to generate assembly for a file
 proceso-pruebas-2.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/PRUEBA.dir/build.make CMakeFiles/PRUEBA.dir/proceso-pruebas-2.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/proceso-pruebas-2.dir/build.make CMakeFiles/proceso-pruebas-2.dir/proceso-pruebas-2.c.s
 .PHONY : proceso-pruebas-2.c.s
 
 proceso-pruebas.o: proceso-pruebas.c.o
@@ -186,6 +199,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... PRUEBA"
+	@echo "... proceso-pruebas-2"
 	@echo "... proceso-pruebas-2.o"
 	@echo "... proceso-pruebas-2.i"
 	@echo "... proceso-pruebas-2.s"
