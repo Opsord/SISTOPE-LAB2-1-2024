@@ -3,5 +3,6 @@
     "files.associations": {
         "unistd.h": "c",
         "estructuras.h": "c"
-    }
+    },
+    "cmake.sourceDirectory": "C:/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas"
 }

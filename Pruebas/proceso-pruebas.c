@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <unistd.h>
-#include <sys/wait.h>
+#include <unistd.h>   // Librería para fork - Linux
+#include <sys/wait.h> // Librería para waitpid - Linux
 
 int main()
 {
@@ -15,7 +15,12 @@ int main()
     if (pid == 0)
     {
         printf("Inicio del proceso hijo\n");
-        execl("./proceso-pruebas-2", "proceso-pruebas-2", "123", NULL);
+
+        // Convertir el número a cadena
+        char numero_str[10];
+        sprintf(numero_str, "%d", 10);
+        // Crear un puntero a la cadena
+        execl("./proceso-pruebas-2", "proceso-pruebas-2", numero_str, NULL);
         // Termina el proceso prueba
         exit(1);
     }
