@@ -5,13 +5,33 @@
 #include "LAB/worker/fworker.h"
 
 // Función para dividir la imagen en imágenes más pequeñas matricialmente
+// Function to split image and apply filter
+BMPImage* split_columns(int num, BMPImage *image) {
+    uint32_t part_width = image->width / num;
+    BMPImage* parts = malloc(num * sizeof(BMPImage));
+    for (int i = 0; i < num; i++) {
+        parts[i].width = part_width;
+        parts[i].height = image->height;
+        // Calculate the byte offset for each part considering each pixel might be more than 1 byte
+        size_t pixelSize = sizeof(Pixel); // Assuming Pixel is a defined structure for pixel data
+        parts[i].data = (Pixel*)((uint8_t*)image->data + i * part_width * pixelSize * image->height);
+    }
+    return parts;
+}
+
 
 // Calcular el número de columnas que le corresponderá a cada worker de forma equitativa
 // dividiendo el ancho total de la imagen (M) entre el número de workers.
+int calculate_columns_per_worker(int total_columns, int num_workers) {
+    return total_columns / num_workers;
+}
 
 // Calcular el resto de esta división para saber cuántas columnas adicionales debe manejar el último worker.
-
+int calculate_extra_columns(int total_columns, int num_workers) {
+    return total_columns % num_workers;
+}
 // Para cada worker, excepto el último, asignarle el número equitativo de columnas calculado en el paso 1.
+
 
 // Al último worker, asignarle el número equitativo de columnas más el resto calculado en el paso 2.
 
@@ -61,17 +81,7 @@ void divide_image_for_workers(BMPImage* original, int num_workers) {
 
 
 
-// Function to split image and apply filter
-BMPImage* split(int num, BMPImage *image) {
-    uint32_t part_height = image->height / num;
-    BMPImage* parts = malloc(num * sizeof(BMPImage));
-    for (int i = 0; i < num; i++) {
-        parts[i].width = image->width;
-        parts[i].height = part_height;
-        parts[i].data = image->data + i * part_height * image->width;
-    }
-    return parts;
-}
+
 
 // Function to compare worker ids for qsort
 int compare_worker_id(const void *a, const void *b) {
