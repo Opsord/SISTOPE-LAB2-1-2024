@@ -30,8 +30,23 @@ int calculate_columns_per_worker(int total_columns, int num_workers) {
 int calculate_extra_columns(int total_columns, int num_workers) {
     return total_columns % num_workers;
 }
-// Para cada worker, excepto el último, asignarle el número equitativo de columnas calculado en el paso 1.
 
+// Para cada worker, excepto el último, asignarle el número equitativo de columnas calculado.
+Worker call_worker(BMPImage image, int id_worker, int num_filters, int factor_saturacion, int umbral_binarizacion){
+
+    // Primero se crea un worker con el id correspondiente
+    Worker worker;
+    worker.id = id_worker;
+    // Asignamos la imagen a modificar
+    worker.original = image;
+
+    // Luego se llama a la función pipeline que aplica los filtros a la imagen
+    pipeline(&worker, num_filters, factor_saturacion, umbral_binarizacion);
+
+    // Finalmente se retorna el worker con la imagen modificada
+    return worker;
+
+}
 
 // Al último worker, asignarle el número equitativo de columnas más el resto calculado en el paso 2.
 
@@ -68,28 +83,18 @@ void divide_image_for_workers(BMPImage* original, int num_workers) {
     }
 }
 
-// Función para asignar partes de una imagen a un worker
+// Función para asignar partes de una imagen a un worker -- No es necesaria
 
-// Esperar que los workers completen su trabajo
+// Esperar que los workers completen su trabajo -- wait?
 
-// Función para comparar los ids de los workers para qsort
-
-// Función para unir las partes de una imagen de todos los workers
-
-
-
-
-
-
-
-
+// Función para comparar los ids de los workers para qsort --
 // Function to compare worker ids for qsort
 int compare_worker_id(const void *a, const void *b) {
     Worker *workerA = (Worker *)a;
     Worker *workerB = (Worker *)b;
     return (workerA->id - workerB->id);
 }
-
+// Función para unir las partes de una imagen de todos los workers
 // Function to merge image parts
 // Function to merge image parts from all workers
 BMPImage* merge_all(Worker* workers, int num_workers, BMPImage* (*get_image)(Worker*)) {
@@ -113,4 +118,41 @@ BMPImage* merge_all(Worker* workers, int num_workers, BMPImage* (*get_image)(Wor
     }
 
     return merged;
+}
+
+
+
+// Split alternativo que divide la imagen en partes de igual tamaño excepto el ultimo trozo
+BMPImage* split_columns_2(int num, BMPImage *image) {
+    uint32_t total_width = image->width;
+    uint32_t base_part_width = total_width / num; // Ancho base para cada parte
+    int extra_columns = total_width % num; // Columnas extras que no se distribuyen equitativamente
+
+    BMPImage* parts = (BMPImage*)malloc(num * sizeof(BMPImage));
+    uint32_t current_offset = 0; // Desplazamiento actual para calcular el inicio de cada parte
+
+    for (int i = 0; i < num; i++) {
+        parts[i].height = image->height;
+        // Si es la última parte y hay columnas extras, se añaden a esta parte
+        if (i == num - 1 && extra_columns > 0) {
+            parts[i].width = base_part_width + extra_columns;
+        } else {
+            parts[i].width = base_part_width;
+        }
+
+        size_t pixelSize = sizeof(Pixel); // Tamaño de cada píxel
+        parts[i].data = (Pixel*)malloc(parts[i].width * parts[i].height * pixelSize);
+
+        // Copiar los datos de píxeles correspondientes a cada parte
+        for (uint32_t y = 0; y < parts[i].height; y++) {
+            for (uint32_t x = 0; x < parts[i].width; x++) {
+                uint32_t originalIndex = y * total_width + (current_offset + x);
+                parts[i].data[y * parts[i].width + x] = image->data[originalIndex];
+            }
+        }
+
+        current_offset += parts[i].width; // Actualizar el desplazamiento para la siguiente parte
+    }
+
+    return parts;
 }
