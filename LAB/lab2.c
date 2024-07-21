@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 
     // ------------------- Creación de variables -------------------
 
-    // Creation de variable para el nombre del archivo
+    // Creación de variable para el nombre del archivo
     char nombre_archivo[256];
     // Creación del nombre del archivo
     sprintf(nombre_archivo, "%s%s", nombre_prefijo, ".bmp");
@@ -107,89 +107,6 @@ int main(int argc, char *argv[])
     // ------------------- Llamado al broker -------------------
 
     // Llamado al broker con la cantidad de workers, la imagen y los filtros a aplicar
-
-    // ------------------- Aplicación de los filtros -------------------
-
-    if (cantidad_filtros == 1)
-    {
-        // Saturación
-        sprintf(output_filename, "%s/%s", nombre_carpeta, "saturada.bmp");
-        BMPImage *imagen_saturada = saturate_bmp(imagen, factor_saturacion);
-        if (imagen_saturada == NULL)
-        {
-            printf("Error al saturar la imagen\n");
-            return 1;
-        }
-        // Imprimir la información de la imagen
-        printf("Ancho: %d\n", imagen_saturada->width);
-        printf("Alto: %d\n", imagen_saturada->height);
-        // Imprimir información del header
-
-        printf("Imagen saturada\n");
-        write_bmp(output_filename, imagen_saturada);
-    }
-    // Si se llaman 2, se llaman los dos primeros
-    if (cantidad_filtros == 2)
-    {
-        // Saturación
-        sprintf(output_filename, "%s/%s", nombre_carpeta, "saturada.bmp");
-        BMPImage *imagen_saturada = saturate_bmp(imagen, factor_saturacion);
-        if (imagen_saturada == NULL)
-        {
-            printf("Error al saturar la imagen\n");
-            return 1;
-        }
-        printf("Imagen saturada\n");
-        write_bmp(output_filename, imagen_saturada);
-
-        // Escala de grises
-        sprintf(output_filename, "%s/%s", nombre_carpeta, "gris.bmp");
-        BMPImage *imagen_gris = grayscale_bmp(imagen);
-        if (imagen_gris == NULL)
-        {
-            printf("Error al convertir a escala de grises\n");
-            return 1;
-        }
-        printf("Imagen en escala de grises\n");
-        write_bmp(output_filename, imagen_gris);
-    }
-
-    // Si se llaman 3, se llaman todos
-    if (cantidad_filtros == 3)
-    {
-        // Saturación
-        sprintf(output_filename, "%s/%s", nombre_carpeta, "saturada.bmp");
-        BMPImage *imagen_saturada = saturate_bmp(imagen, factor_saturacion);
-        if (imagen_saturada == NULL)
-        {
-            printf("Error al saturar la imagen\n");
-            return 1;
-        }
-        printf("Imagen saturada\n");
-        write_bmp(output_filename, imagen_saturada);
-
-        // Escala de grises
-        sprintf(output_filename, "%s/%s", nombre_carpeta, "gris.bmp");
-        BMPImage *imagen_gris = grayscale_bmp(imagen);
-        if (imagen_gris == NULL)
-        {
-            printf("Error al convertir a escala de grises\n");
-            return 1;
-        }
-        printf("Imagen en escala de grises\n");
-        write_bmp(output_filename, imagen_gris);
-
-        // Binarización
-        sprintf(output_filename, "%s/%s", nombre_carpeta, "binaria.bmp");
-        BMPImage *imagen_binaria = binary_bmp(imagen, umbral_binarizacion);
-        if (imagen_binaria == NULL)
-        {
-            printf("Error al binarizar la imagen\n");
-            return 1;
-        }
-        printf("Imagen binarizada\n");
-        write_bmp(output_filename, imagen_binaria);
-    }
 
     // ------------------- Clasificación -------------------
 

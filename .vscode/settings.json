@@ -2,7 +2,11 @@
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
         "unistd.h": "c",
-        "estructuras.h": "c"
+        "estructuras.h": "c",
+        "lectura.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c",
+        "string.h": "c"
     },
     "cmake.sourceDirectory": "C:/Users/andre/Cosas Progra/Sistemas Operativos/SISTOPE-LAB2-1-2024/Pruebas"
 }

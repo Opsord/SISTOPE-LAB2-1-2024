@@ -4,17 +4,19 @@
 #include <stdint.h>
 
 #pragma pack(push, 1)
-typedef struct {
+typedef struct
+{
     // Definición de la estructura BMP Header (Información del archivo)
-    uint16_t type;              // Tipo de dato, indica si el archivo es BMP a través de las siglas BM
-    uint32_t size;              // Tamaño del archivo
-    uint16_t reserved1;         // Reservado
-    uint16_t reserved2;         // Reservado
-    uint32_t offset;            // Offset, indica la posición en bytes donde comienza la información de la imagen
+    uint16_t type;      // Tipo de dato, indica si el archivo es BMP a través de las siglas BM
+    uint32_t size;      // Tamaño del archivo
+    uint16_t reserved1; // Reservado
+    uint16_t reserved2; // Reservado
+    uint32_t offset;    // Offset, indica la posición en bytes donde comienza la información de la imagen
 } BMPHeader;
 
 // Definición de la estructura BMP Info Header (Información de la imagen contenida en el archivo)
-typedef struct {
+typedef struct
+{
     uint32_t size_info;         // Tamaño de la información de la imagen (info header)
     int32_t width;              // Ancho de la imagen
     int32_t height;             // Alto de la imagen
@@ -30,17 +32,29 @@ typedef struct {
 #pragma pack(pop)
 
 // Definición de la estructura Pixel (Pixel RGB/BIT)
-typedef struct {
+typedef struct
+{
     unsigned char r;
     unsigned char g;
     unsigned char b;
 } Pixel;
 
 // Definición de la estructura BMPImage (Imagen BMP)
-typedef struct {
+typedef struct
+{
     uint32_t width;
     uint32_t height;
     Pixel *data; // Puntero a los píxeles de la imagen
 } BMPImage;
+
+// Definición de la estructura Worker
+typedef struct
+{
+    int id;
+    BMPImage *original;
+    BMPImage *saturada;
+    BMPImage *grises;
+    BMPImage *binarizada;
+} Worker;
 
 #endif // ESTRUCTURAS_H
