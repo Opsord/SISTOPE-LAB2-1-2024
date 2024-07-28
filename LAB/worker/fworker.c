@@ -8,7 +8,7 @@
 
 // Función para aplicar los filtros a la imagen
 
-Worker pipeline(Worker *worker, int num_filters, int factor_saturacion, int umbral_binarizacion)
+Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbral_binarizacion)
 {
     // Split the image into parts
     BMPImage *original = worker->original;

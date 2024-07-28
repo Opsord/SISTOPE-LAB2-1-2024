@@ -39,7 +39,7 @@ Worker call_worker(BMPImage image, int id_worker, int num_filters, int factor_sa
     worker.original = &image;
 
     // Luego se llama a la función pipeline que aplica los filtros a la imagen
-    pipeline(&worker, num_filters, factor_saturacion, umbral_binarizacion);
+    workflow(&worker, num_filters, factor_saturacion, umbral_binarizacion);
 
     // Finalmente se retorna el worker con la imagen modificada
     return worker;
@@ -105,24 +105,34 @@ int compare_worker_id(const void *a, const void *b)
 // Funcionamiento: Une todas las partes de las imágenes de los workers en una sola imagen
 BMPImage *merge_all(Worker *workers, int num_workers, BMPImage *(*get_image)(Worker *))
 {
-    // Save the total number of parts
-    int total_parts = num_workers;
-
     // Allocate memory for the merged image
     BMPImage *merged_image = malloc(sizeof(BMPImage));
-    merged_image->width = get_image(&workers[0])->width;
-    merged_image->height = get_image(&workers[0])->height * total_parts;
+    merged_image->width = 0;
+    merged_image->height = get_image(&workers[0])->height;
+
+    // Calculate the total width of the merged image
+    for (int i = 0; i < num_workers; i++)
+    {
+        merged_image->width += get_image(&workers[i])->width;
+    }
+
     merged_image->data = malloc(merged_image->width * merged_image->height * sizeof(Pixel));
 
     // Sort workers by id
     qsort(workers, num_workers, sizeof(Worker), compare_worker_id);
 
     // Merge all parts from all workers
+    uint32_t current_offset = 0;
     for (int i = 0; i < num_workers; i++)
     {
         BMPImage *part = get_image(&workers[i]);
-        memcpy(merged_image->data + i * part->width * part->height, part->data,
-               part->width * part->height * sizeof(Pixel));
+        for (uint32_t y = 0; y < part->height; y++)
+        {
+            memcpy(merged_image->data + y * merged_image->width + current_offset,
+                   part->data + y * part->width,
+                   part->width * sizeof(Pixel));
+        }
+        current_offset += part->width;
     }
 
     return merged_image;
