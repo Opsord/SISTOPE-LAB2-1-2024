@@ -3,24 +3,26 @@
 
 #include "fbroker.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
+    if (argc < 5)
+    {
+        fprintf(stderr, "Uso: %s <num_workers> <num_filters> <saturation_factor> <binarization_threshold>\n", argv[0]);
+        return 1;
+    }
+
+    int num_workers = atoi(argv[1]);
+    int num_filters = atoi(argv[2]);
+    float saturation_factor = atof(argv[3]);
+    float binarization_threshold = atof(argv[4]);
+
+    printf("Número de workers: %d\n", num_workers);
+    printf("Número de filtros: %d\n", num_filters);
+    printf("Factor de saturación: %f\n", saturation_factor);
+    printf("Umbral de binarización: %f\n", binarization_threshold);
 
     // Procesar argumentos y preparar el trabajo
-
-    // Dividir la imagen en imágenes más pequeñas: (Enunciado)
-    // Para la aplicación de los filtros por parte de los workers, el broker dividirá usando el módulo (%)
-    // la imagen de tamaño NXM, tomando solo la columna, en la cantidad de workers creados, es decir,
-    // M%cantidad de workers. Donde el resto de la división se le deberá enviar al último worker.
-
-    // Crear workers con fork() y asignarles una sub-imagen
-
-    // Esperar a que los workers completen
-
-    // Reconstruir la imagen original
-
-    // Mandar la imagen al proceso main
-
-    // Liberar memoria y terminar
+    // ...
 
     return 0;
 }

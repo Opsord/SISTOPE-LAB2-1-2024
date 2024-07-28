@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "LAB/estructuras.h"
-#include "LAB/worker/fworker.h"
+#include "../estructuras.h"
+#include "../worker/fworker.h"
 
 // Entrada: Número de partes en las que se dividirá la imagen, imagen original
 // Salida: Arreglo de imágenes divididas
@@ -36,7 +36,7 @@ Worker call_worker(BMPImage image, int id_worker, int num_filters, int factor_sa
     Worker worker;
     worker.id = id_worker;
     // Asignamos la imagen a modificar
-    worker.original = image;
+    worker.original = &image;
 
     // Luego se llama a la función pipeline que aplica los filtros a la imagen
     pipeline(&worker, num_filters, factor_saturacion, umbral_binarizacion);
@@ -100,9 +100,9 @@ int compare_worker_id(const void *a, const void *b)
     }
 }
 
-// Función para unir las partes de una imagen de todos los workers
-// Function to merge image parts
-// Function to merge image parts from all workers
+// Entrada: Arreglo de workers, cantidad de workers, función para obtener la imagen de un worker
+// Salida: Imagen BMP con todas las partes unidas
+// Funcionamiento: Une todas las partes de las imágenes de los workers en una sola imagen
 BMPImage *merge_all(Worker *workers, int num_workers, BMPImage *(*get_image)(Worker *))
 {
     // Save the total number of parts

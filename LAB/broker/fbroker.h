@@ -1,7 +1,7 @@
 #ifndef SISTOPE_LAB2_1_2024_FBROKER_H
 #define SISTOPE_LAB2_1_2024_FBROKER_H
 
-#include "LAB/estructuras.h"
+#include "../estructuras.h"
 
 // Entrada: Número de partes en las que se dividirá la imagen, imagen original
 // Salida: Arreglo de imágenes divididas
@@ -24,9 +24,9 @@ void divide_image_for_workers(BMPImage *original, int num_workers);
 // Funcionamiento: Compara los id de los workers y retorna el id más bajo
 int compare_worker_id(const void *a, const void *b);
 
-// Función para unir las partes de una imagen de todos los workers
-// Function to merge image parts
-// Function to merge image parts from all workers
+// Entrada: Arreglo de workers, cantidad de workers, función para obtener la imagen de un worker
+// Salida: Imagen BMP con todas las partes unidas
+// Funcionamiento: Une todas las partes de las imágenes de los workers en una sola imagen
 BMPImage *merge_all(Worker *workers, int num_workers, BMPImage *(*get_image)(Worker *));
 
 // Entrada: Número de partes en las que se dividirá la imagen, imagen original

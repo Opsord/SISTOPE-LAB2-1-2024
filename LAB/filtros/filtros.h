@@ -2,7 +2,7 @@
 #define FILTROS_H
 
 #include <stdbool.h>
-#include "LAB/estructuras.h"
+#include "../estructuras.h"
 
 // Entrada: estructura BMPImage con la información de la imagen y un factor de saturación
 // Salida: estructura BMPImage con la imagen saturada
