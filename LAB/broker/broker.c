@@ -1,20 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "fbroker.h"
+#include "../estructuras.h"
+#include "../lectura/lectura.h"
 
-int main(int argc, char *argv[])
-{
-    if (argc < 5)
-    {
-        fprintf(stderr, "Uso: %s <num_workers> <num_filters> <saturation_factor> <binarization_threshold>\n", argv[0]);
-        return 1;
-    }
+int main() {
 
-    int num_workers = atoi(argv[1]);
-    int num_filters = atoi(argv[2]);
-    float saturation_factor = atof(argv[3]);
-    float binarization_threshold = atof(argv[4]);
+    close(pipe_broker[1]); // Cerrar el extremo de escritura del pipe
+
+    char num_workers_str[10], num_filters_str[10], saturation_factor_str[10], binarization_threshold_str[10];
+    read(pipe_broker[0], num_workers_str, sizeof(num_workers_str));
+    read(pipe_broker[0], num_filters_str, sizeof(num_filters_str));
+    read(pipe_broker[0], saturation_factor_str, sizeof(saturation_factor_str));
+    read(pipe_broker[0], binarization_threshold_str, sizeof(binarization_threshold_str));
+    close(pipe_broker[0]); // Cerrar el extremo de lectura del pipe
+
 
     printf("Número de workers: %d\n", num_workers);
     printf("Número de filtros: %d\n", num_filters);
@@ -23,23 +25,33 @@ int main(int argc, char *argv[])
 
     // Procesar argumentos y preparar el trabajo
     // ...
-    Worker* workers = (Worker*)malloc(num_workers * sizeof(Worker));
-    BMPImage* image = read_bmp("image.bmp");
+    Worker *workers = (Worker *)malloc(num_workers * sizeof(Worker));
+    BMPImage *image = read_bmp("image.bmp");
     // Dividir la imagen en partes
-    BMPImage* parts = split_columns_2(num_workers, image);
-    for(int i = 0; i < num_workers; i++){
+    BMPImage *parts = split_columns_2(num_workers, image);
+    // Lista de elementos para la pipe
+    int pipe_workflow[2];
+    // Llamado a pipe
+    pipe(pipe_workflow);
+    // Llamado a workers con la lista de partes de la imagen
+    for (int i = 0; i < num_workers; i++)
+    {
         printf("Worker %d\n", i);
+        // Pipe para los workers
         int pid = fork();
-        if (pid == 0)
-        {
+        if (pid == 0) {
+
+        }
+            // EXCL para cambio de ejecucion a los workers
+
             printf("Inicio del proceso hijo\n");
             // Crear un worker con la imagen correspondiente
-            BMPImage* part = &parts[i];
+            BMPImage *part = &parts[i];
             Worker hijo;
-            worker.id = i;
-            worker.original = part;
+            hijo.id = i;
+            hijo.original = part;
             // Aplicar los filtros a la imagen
-            Worker worker = call_worker(hijo, i, num_filters, saturation_factor, binarization_threshold);
+            Worker worker = call_worker(*part, i, num_filters, saturation_factor, binarization_threshold);
             // Agregar el worker al arreglo
             workers[i] = worker;
             // Termina el proceso hijo
@@ -51,7 +63,7 @@ int main(int argc, char *argv[])
             int status;
             waitpid(pid, &status, 0);
             // Unir los resultados de los workers
-            BMPImage *final_image = merge_all(workers, num_workers);
+            BMPImage *final_image = merge_all(workers, num_workers, ());
             write_bmp("final_image.bmp", final_image);
             // Liberar memoria
             free_bmp(final_image);
@@ -67,7 +79,6 @@ int main(int argc, char *argv[])
             exit(1);
         }
     }
-
 
     return 0;
 }

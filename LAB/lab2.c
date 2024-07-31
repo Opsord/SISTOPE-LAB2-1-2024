@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
-
+#include <sys/wait.h>
 #include "lectura/lectura.h"
 #include "filtros/filtros.h"
 #include "resultados/resultados.h"
@@ -99,34 +99,48 @@ int main(int argc, char *argv[])
     printf("Ancho: %d\n", image->width);
     printf("Alto: %d\n", image->height);
 
+
+    // ------------------- Manejo de pipe ----------------------
+    int pipe_broker[2];
+    // [0] es lectura [1] es escritura
+    if (pipe(pipe_broker) == -1){
+        printf("ERROR EN PIPE");
+        return 1;
+    }
     // ------------------- Llamada al broker -------------------
 
     // Llamada al broker con la cantidad de workers, la imagen y la cantidad de filtros a aplicar
     pid_t pid = fork();
 
-    // Tarea para el proceso hijo
-    if (pid == 0)
-    {
-        printf("Inicio del proceso hijo\n");
+    // Verificación de la creación del proceso hijo
+    if (pid == -1) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
 
-        // Convertir el número de workers a cadena
-        char num_workers_str[10];
-        sprintf(num_workers_str, "%f", num_workers);
-        // Convertir el número de filtros a cadena
-        char num_filters_str[10];
-        sprintf(num_filters_str, "%d", num_filters);
-        // Convertir el factor de saturación a cadena
-        char saturation_factor_str[10];
-        sprintf(saturation_factor_str, "%f", saturation_factor);
-        // Convertir el umbral de binarización a cadena
-        char binarization_threshold_str[10];
-        sprintf(binarization_threshold_str, "%f", binarization_threshold);
+    // Proceso hijo
+    if (pid == 0) {
+        execl("./broker", "broker", NULL);
+        // Si execl falla
+        perror("execl");
+        exit(EXIT_FAILURE);
 
-        printf("Cambiar la ejecución del proceso hijo al broker\n");
-        // Cambiar la ejecución del proceso hijo al broker
-        execl("./broker", "broker", num_workers_str, num_filters_str, saturation_factor_str, binarization_threshold_str, NULL);
-        // Termina el proceso hijo y recibir la imagen procesada
-        exit(1);
+    } else { // Pasar los argumentos al pipe desde el proceso padre
+        close(pipe_broker[0]); // Cerrar el extremo de lectura del pipe
+
+        char num_workers_str[10], num_filters_str[10], saturation_factor_str[10], binarization_threshold_str[10];
+        snprintf(num_workers_str, sizeof(num_workers_str), "%f", num_workers);
+        snprintf(num_filters_str, sizeof(num_filters_str), "%d", num_filters);
+        snprintf(saturation_factor_str, sizeof(saturation_factor_str), "%f", saturation_factor);
+        snprintf(binarization_threshold_str, sizeof(binarization_threshold_str), "%f", binarization_threshold);
+
+        write(pipe_broker[1], num_workers_str, sizeof(num_workers_str));
+        write(pipe_broker[1], num_filters_str, sizeof(num_filters_str));
+        write(pipe_broker[1], saturation_factor_str, sizeof(saturation_factor_str));
+        write(pipe_broker[1], binarization_threshold_str, sizeof(binarization_threshold_str));
+        close(pipe_broker[1]); // Cerrar el extremo de escritura del pipe
+
+        wait(NULL); // Esperar a que el proceso hijo termine
     }
 
     // ------------------- Clasificación -------------------
