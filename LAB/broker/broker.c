@@ -23,24 +23,32 @@ int main() {
     printf("Factor de saturación: %f\n", saturation_factor);
     printf("Umbral de binarización: %f\n", binarization_threshold);
 
+
+
     // Procesar argumentos y preparar el trabajo
     // ...
     Worker *workers = (Worker *)malloc(num_workers * sizeof(Worker));
     BMPImage *image = read_bmp("image.bmp");
     // Dividir la imagen en partes
     BMPImage *parts = split_columns_2(num_workers, image);
-    // Lista de elementos para la pipe
-    int pipe_workflow[2];
-    // Llamado a pipe
-    pipe(pipe_workflow);
+
+    // crear pipe para padres e hijos
+    int fd[num_workers][2]; // pipe hijos
+    int fd2[num_workers][2]; // pipe padre
+    for (int i = 0; i < num_workers; i++) {
+        // Llamado a pipes
+        pipe(fd[i]);
+        pipe(fd2[i]);
+    }
+
+
     // Llamado a workers con la lista de partes de la imagen
     for (int i = 0; i < num_workers; i++)
     {
         printf("Worker %d\n", i);
-        // Pipe para los workers
         int pid = fork();
         if (pid == 0) {
-
+            
         }
             // EXCL para cambio de ejecucion a los workers
 
