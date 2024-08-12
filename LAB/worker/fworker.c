@@ -26,7 +26,7 @@ Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbr
                 printf("Error al saturar la imagen\n");
             }
             printf("Imagen saturada\n");
-            worker->saturada = imagen_saturada;
+            worker->saturated = imagen_saturada;
         }
         else if (i == 1)
         {
@@ -37,7 +37,7 @@ Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbr
                 printf("Error al convertir a escala de grises\n");
             }
             printf("Imagen en escala de grises\n");
-            worker->grises = imagen_gris;
+            worker->grayscale = imagen_gris;
         }
         else if (i == 2)
         {
@@ -48,7 +48,7 @@ Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbr
                 printf("Error al binarizar la imagen\n");
             }
             printf("Imagen binarizada\n");
-            worker->binarizada = imagen_binaria;
+            worker->binarized = imagen_binaria;
         }
     }
 

@@ -107,6 +107,7 @@ int main(int argc, char *argv[])
         printf("ERROR EN PIPE");
         return 1;
     }
+
     // ------------------- Llamada al broker -------------------
 
     // Llamada al broker con la cantidad de workers, la imagen y la cantidad de filtros a aplicar
@@ -120,28 +121,28 @@ int main(int argc, char *argv[])
 
     // Proceso hijo
     if (pid == 0) {
-        execl("./broker", "broker", NULL);
+        // Cambio de ejecución a broker y entrega de argumentos
+        execl("./broker", "broker", prefix_name, num_filters, saturation_factor, binarization_threshold, num_workers, NULL);
         // Si execl falla
         perror("execl");
         exit(EXIT_FAILURE);
+    } else {
+        // Cierre del pipe de escritura del proceso padre
+        close(pipe_broker[0]);
 
-    } else { // Pasar los argumentos al pipe desde el proceso padre
-        close(pipe_broker[0]); // Cerrar el extremo de lectura del pipe
+        // Leer la salida del worker desde el pipe
+        char buffer[128];
+        ssize_t bytesRead;
 
-        char num_workers_str[10], num_filters_str[10], saturation_factor_str[10], binarization_threshold_str[10];
-        snprintf(num_workers_str, sizeof(num_workers_str), "%f", num_workers);
-        snprintf(num_filters_str, sizeof(num_filters_str), "%d", num_filters);
-        snprintf(saturation_factor_str, sizeof(saturation_factor_str), "%f", saturation_factor);
-        snprintf(binarization_threshold_str, sizeof(binarization_threshold_str), "%f", binarization_threshold);
+        while ((bytesRead = read(pipefd[0], buffer, sizeof(buffer))) > 0) {
+            write(STDOUT_FILENO, buffer, bytesRead);  // Escribir la salida a stdout
+        }
 
-        write(pipe_broker[1], num_workers_str, sizeof(num_workers_str));
-        write(pipe_broker[1], num_filters_str, sizeof(num_filters_str));
-        write(pipe_broker[1], saturation_factor_str, sizeof(saturation_factor_str));
-        write(pipe_broker[1], binarization_threshold_str, sizeof(binarization_threshold_str));
-        close(pipe_broker[1]); // Cerrar el extremo de escritura del pipe
-
-        wait(NULL); // Esperar a que el proceso hijo termine
+        close(pipefd[0]);  // Cerrar el descriptor de lectura
+        wait(NULL);
     }
+
+    wait(NULL); // Esperar a que el proceso hijo termine
 
     // ------------------- Clasificación -------------------
 

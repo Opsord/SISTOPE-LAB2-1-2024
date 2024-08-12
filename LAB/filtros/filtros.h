@@ -25,8 +25,8 @@ BMPImage *binary_bmp(BMPImage *image, float threshold);
 bool is_nearly_black(BMPImage *image, float threshold);
 
 // Entrada: estructura BMPImage, cantidad de filtros, factor de saturación, umbral de binarización
-// Salida: estructura BMPImage con la imagen procesada
+// Salida: estructura OutputImages con las imágenes procesadas
 // Funcionamiento: aplica los filtros seleccionados a la imagen
-BMPImage *apply_filters(BMPImage *image, int filter_amount, float saturation_factor, float binarization_threshold);
+OutputImages *apply_filters(BMPImage *image, int filter_amount, float saturation_factor, float binarization_threshold);
 
 #endif // FILTROS_H

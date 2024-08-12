@@ -12,7 +12,7 @@ BMPImage *split_columns(int num, BMPImage *image);
 // Salida: Worker con la imagen modificada
 // Funcionamiento: Crea un worker con el id correspondiente, asigna la imagen a modificar
 // y llama a la función pipeline que aplica los filtros a la imagen
-Worker call_worker(BMPImage image, int id_worker, int num_filters, int factor_saturacion, int umbral_binarizacion);
+Worker call_worker(BMPImage image, int id_worker, int num_filters, float saturation_factor, float binarization_treshold);
 
 // Entrada: Imagen BMP original, cantidad de workers
 // Salida: Arreglo de workers con las imágenes modificadas
@@ -27,7 +27,7 @@ int compare_worker_id(const void *a, const void *b);
 // Entrada: Arreglo de workers, cantidad de workers, función para obtener la imagen de un worker
 // Salida: Imagen BMP con todas las partes unidas
 // Funcionamiento: Une todas las partes de las imágenes de los workers en una sola imagen
-BMPImage *merge_all(Worker *workers, int num_workers, BMPImage *(*get_image)(Worker *));
+BMPImage *merge_all(Worker *workers, int num_workers);
 
 // Entrada: Número de partes en las que se dividirá la imagen, imagen original
 // Salida: Arreglo de imágenes divididas
