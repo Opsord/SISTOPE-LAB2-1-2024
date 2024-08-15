@@ -51,10 +51,10 @@ typedef struct
 typedef struct
 {
     int id;
-    BMPImage *original; // la que se recibe
-    BMPImage *saturated; // saturacion - se crea una imagen con el filtro deseado y se guarda posteriormente
-    BMPImage *grayscale; // escala de grises
-    BMPImage *binarized; // binarizada
+    BMPImage *original;
+    BMPImage *saturated;
+    BMPImage *grayscale;
+    BMPImage *binarized;
 } Worker;
 
 typedef struct {

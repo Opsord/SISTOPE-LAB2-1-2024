@@ -54,3 +54,19 @@ Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbr
 
     return *worker;
 }
+
+Worker call_worker(BMPImage image, int id_worker, int num_filters, int factor_saturacion, int umbral_binarizacion)
+{
+
+    // Primero se crea un worker con el id correspondiente
+    Worker worker;
+    worker.id = id_worker;
+    // Asignamos la imagen a modificar
+    worker.original = &image;
+
+    // Luego se llama a la función pipeline que aplica los filtros a la imagen
+    workflow(&worker, num_filters, factor_saturacion, umbral_binarizacion);
+
+    // Finalmente se retorna el worker con la imagen modificada
+    return worker;
+}
