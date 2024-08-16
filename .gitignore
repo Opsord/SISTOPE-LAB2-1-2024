@@ -57,3 +57,7 @@ superresultados
 Ejemplos del ayudante/
 
 *.ninja
+
+LAB/build/
+
+LAB/cmake-build-debug/

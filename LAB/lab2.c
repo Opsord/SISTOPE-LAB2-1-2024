@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <sys/wait.h>
+
 #include "lectura/lectura.h"
 #include "filtros/filtros.h"
 #include "resultados/resultados.h"
@@ -98,9 +99,9 @@ int main(int argc, char *argv[]) {
         close(pipe_broker[0]);  // Cerrar el descriptor de lectura
 
         // Aquí podrías procesar las imágenes recibidas
-        write_bmp(output_images.saturated, "output_saturated.bmp");
-        write_bmp(output_images.grayscale, "output_grayscale.bmp");
-        write_bmp(output_images.binarized, "output_binarized.bmp");
+        write_bmp("output_saturated.bmp", output_images.saturated);
+        write_bmp("output_grayscale.bmp", output_images.grayscale);
+        write_bmp("output_binarized.bmp", output_images.binarized);
 
         // Liberar memoria de las imágenes recibidas
         free_bmp(output_images.saturated);

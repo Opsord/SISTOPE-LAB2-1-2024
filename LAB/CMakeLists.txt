@@ -29,6 +29,7 @@ add_executable(broker
     broker/fbroker.c
     broker/fbroker.h
     estructuras.h
+    lectura/lectura.c
 )
 
 # Worker
