@@ -8,7 +8,7 @@
 
 // Función para aplicar los filtros a la imagen
 
-Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbral_binarizacion)
+Worker workflow(Worker *worker, int num_filters, float saturation_factor, float binarization_threshold)
 {
     // Split the image into parts
     BMPImage *original = worker->original;
@@ -20,7 +20,7 @@ Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbr
         if (i == 0)
         {
             // Saturación
-            BMPImage *imagen_saturada = saturate_bmp(original, factor_saturacion);
+            BMPImage *imagen_saturada = saturate_bmp(original, saturation_factor);
             if (imagen_saturada == NULL)
             {
                 printf("Error al saturar la imagen\n");
@@ -42,7 +42,7 @@ Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbr
         else if (i == 2)
         {
             // Binarización
-            BMPImage *imagen_binaria = binary_bmp(original, umbral_binarizacion);
+            BMPImage *imagen_binaria = binary_bmp(original, binarization_threshold);
             if (imagen_binaria == NULL)
             {
                 printf("Error al binarizar la imagen\n");
@@ -55,7 +55,7 @@ Worker workflow(Worker *worker, int num_filters, int factor_saturacion, int umbr
     return *worker;
 }
 
-Worker call_worker(BMPImage image, int id_worker, int num_filters, int factor_saturacion, int umbral_binarizacion)
+Worker call_worker(BMPImage image, int id_worker, int num_filters, float saturation_factor, float binarization_threshold)
 {
 
     // Primero se crea un worker con el id correspondiente
@@ -65,7 +65,7 @@ Worker call_worker(BMPImage image, int id_worker, int num_filters, int factor_sa
     worker.original = &image;
 
     // Luego se llama a la función pipeline que aplica los filtros a la imagen
-    workflow(&worker, num_filters, factor_saturacion, umbral_binarizacion);
+    workflow(&worker, num_filters, saturation_factor, binarization_threshold);
 
     // Finalmente se retorna el worker con la imagen modificada
     return worker;
