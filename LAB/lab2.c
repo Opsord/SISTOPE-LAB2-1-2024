@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     char *csv_file_name = NULL;
 
     int option;
-    printf("Main process started\n");
+    printf("Main process starting\n");
 
     while ((option = getopt(argc, argv, "N:f:p:u:v:C:R:w:")) != -1) {
         switch (option) {
@@ -71,6 +71,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    printf("Main process: Creating broker process\n");
+
     pid_t pid = fork();
 
     if (pid == -1) {
@@ -84,11 +86,26 @@ int main(int argc, char *argv[]) {
         dup2(pipe_broker[1], STDOUT_FILENO);
         close(pipe_broker[1]);
 
-        execl("./broker", "broker", prefix_name, argv[2], argv[3], argv[4], argv[5], NULL);
+        // Convertir los argumentos a cadenas de texto
+        char num_filters_str[10];
+        char saturation_factor_str[10];
+        char binarization_threshold_str[10];
+        char num_workers_str[10];
+
+        snprintf(num_filters_str, sizeof(num_filters_str), "%d", num_filters);
+        snprintf(saturation_factor_str, sizeof(saturation_factor_str), "%f", saturation_factor);
+        snprintf(binarization_threshold_str, sizeof(binarization_threshold_str), "%f", binarization_threshold);
+        snprintf(num_workers_str, sizeof(num_workers_str), "%d", num_workers);
+
+        printf("Starting broker process\n");
+        execl("./broker", "broker", prefix_name, num_filters, saturation_factor, binarization_threshold, num_workers, NULL);
 
         perror("execl");
         exit(EXIT_FAILURE);
     } else {  // Proceso padre
+
+        printf("Main process: Handling pipes\n");
+
         close(pipe_broker[1]);  // Cerrar el extremo de escritura en el padre
 
         OutputImages output_images;
@@ -108,6 +125,7 @@ int main(int argc, char *argv[]) {
         free_bmp(output_images.grayscale);
         free_bmp(output_images.binarized);
 
+        printf("Main process: Waiting for workers\n");
         // Esperar a que el proceso hijo termine
         wait(NULL);
 

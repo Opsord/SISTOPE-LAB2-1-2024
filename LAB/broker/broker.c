@@ -9,12 +9,15 @@
 
 int main(int argc, char *argv[]) {
 
+    printf("Broker started\n");
+
     // ---------------------Verificación de argumentos-------------------------
 
     // Verificar que los argumentos sean 5
     if (argc != 6) { // 5 argumentos + puntero null
         printf("Error: argumentos inválidos\n");
-        return 1;
+        // Mostrar cantidad de argumentos recibidos
+        printf("Cantidad de argumentos recibidos: %d\n", argc);
     }
 
     // Recordatorio de los argumentos
@@ -29,6 +32,12 @@ int main(int argc, char *argv[]) {
     float saturation_factor = atof(argv[3]);
     float binarization_threshold = atoi(argv[4]);
     int num_workers = atoi(argv[5]);
+
+    // Mostrar los argumentos recibidos
+    printf("Nombre del prefijo: %s\n", prefix_name);
+    printf("Número de filtros: %d\n", num_filters);
+    printf("Factor de saturación: %f\n", saturation_factor);
+    printf("Umbral de binarización: %f\n", binarization_threshold);
 
     // ---------------------Lectura de la imagen-------------------------
 
@@ -126,8 +135,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    OutputImages *final_image = malloc(sizeof(OutputImages));
+    if (final_image == NULL) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
     // Unir los resultados de los workers
-    OutputImages *final_image = merge_all(workers, num_workers);
+    final_image = merge_all(workers, num_workers);
 
     // Enviar la estructura Worker resultante a stdout
     ssize_t bytes_written = write(STDOUT_FILENO, &final_image, sizeof(OutputImages));
