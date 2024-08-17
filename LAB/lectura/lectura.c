@@ -7,6 +7,8 @@
 // Apertura del archivo en modo lectura binaria
 BMPImage *read_bmp(const char *filename)
 {
+    // Verificaciones
+
     FILE *file = fopen(filename, "rb"); // rb = read binary
     if (!file)
     {
@@ -68,7 +70,7 @@ BMPImage *read_bmp(const char *filename)
     fseek(file, header.offset, SEEK_SET);
 
     // se hace padding para que la imagen tenga un tamaño múltiplo de 4, esto se hace para que la imagen sea más rápida de leer
-    int padding = (4 - (info_header.width * sizeof(Pixel)) % 4) % 4; // primero se pasan a bytes los píxeles de la imagen y se calcula el residuo de la división entre 4, si el residuo es 0 no hay padding, si el residuo es 1, 2 o 3 se calcula el padding
+    long padding = (4 - (info_header.width * sizeof(Pixel)) % 4) % 4; // primero se pasan a bytes los píxeles de la imagen y se calcula el residuo de la división entre 4, si el residuo es 0 no hay padding, si el residuo es 1, 2 o 3 se calcula el padding
     // Lectura de los píxeles de la imagen
     for (int y = info_header.height - 1; y >= 0; y--)
     {

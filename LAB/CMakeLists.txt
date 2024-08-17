@@ -24,7 +24,7 @@ add_executable(${PROJECT_NAME}
 )
 
 # Broker
-add_executable(broker
+add_executable(BROKER
         broker/broker.c
         broker/fbroker.c
         broker/fbroker.h
@@ -33,7 +33,7 @@ add_executable(broker
 )
 
 # Worker
-add_executable(worker
+add_executable(WORKER
         worker/worker.c
         worker/fworker.c
         worker/fworker.h
@@ -52,7 +52,7 @@ add_custom_target(debug
 
 # Custom target to run gdb
 add_custom_target(gdb
-        COMMAND gdb ./broker
-        DEPENDS broker
+        COMMAND gdb ./
+        DEPENDS LAB2
         COMMENT "Running gdb on broker"
 )

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #include "fbroker.h"
 #include "../estructuras.h"
@@ -28,16 +29,46 @@ int main(int argc, char *argv[]) {
     // num_workers               argv[5]
 
     const char *prefix_name = argv[1];
-    int num_filters = atoi(argv[2]);
-    float saturation_factor = atof(argv[3]);
-    float binarization_threshold = atoi(argv[4]);
-    int num_workers = atoi(argv[5]);
 
+    char *endptr;
+    errno = 0;
+
+    // Convertir num_filters
+    int num_filters = strtol(argv[2], &endptr, 10);
+    if (errno != 0 || *endptr != '\0') {
+        perror("Error al convertir num_filters");
+        return 1;
+    }
+
+    // Convertir saturation_factor
+    float saturation_factor = strtof(argv[3], &endptr);
+    if (errno != 0 || *endptr != '\0') {
+        perror("Error al convertir saturation_factor");
+        return 1;
+    }
+
+    // Convertir binarization_threshold
+    float binarization_threshold = strtof(argv[4], &endptr);
+    if (errno != 0 || *endptr != '\0') {
+        perror("Error al convertir binarization_threshold");
+        return 1;
+    }
+
+    // Convertir num_workers
+    int num_workers = strtol(argv[5], &endptr, 10);
+    if (errno != 0 || *endptr != '\0') {
+        perror("Error al convertir num_workers");
+        return 1;
+    }
+
+    /*
     // Mostrar los argumentos recibidos
-    printf("Nombre del prefijo: %s\n", prefix_name);
-    printf("Número de filtros: %d\n", num_filters);
-    printf("Factor de saturación: %f\n", saturation_factor);
-    printf("Umbral de binarización: %f\n", binarization_threshold);
+    printf("Prefix name: %s\n", prefix_name);
+    printf("Number of filters: %d\n", num_filters);
+    printf("Saturation factor: %f\n", saturation_factor);
+    printf("Binarization threshold: %f\n", binarization_threshold);
+    printf("Num workers: %d\n", num_workers);
+    */
 
     // ---------------------Lectura de la imagen-------------------------
 
@@ -57,7 +88,7 @@ int main(int argc, char *argv[]) {
 
     // ---------------------Manejo de pipes y workers-------------------------
 
-    // Creacion de pipe para el broker
+    // Creación de pipe para el broker
     int pipe_broker[2];
 
     // Cerrar el extremo de escritura del pipe
@@ -158,10 +189,11 @@ int main(int argc, char *argv[]) {
     free(parts);
     free(workers);
 
-    printf("Proceso padre terminó\n");
+    printf("Broker process finished\n");
     return 0;
 
 }
+
 
 /*
 
