@@ -9,6 +9,9 @@
 #include "resultados/resultados.h"
 
 int main(int argc, char *argv[]) {
+
+    // ---------------------Definición de argumentos-------------------------
+
     // Variables para las opciones y sus valores por defecto
     char *prefix_name = NULL;
     int num_filters = 3;
@@ -56,6 +59,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // ---------------------Verificación de argumentos-------------------------
+
     if (prefix_name == NULL) {
         printf("El nombre del prefijo es obligatorio\n");
         return 1;
@@ -64,6 +69,8 @@ int main(int argc, char *argv[]) {
     char bmp_file_name[256];
     snprintf(bmp_file_name, sizeof(bmp_file_name), "%s.bmp", prefix_name);
 
+    // ---------------------------Creación de pipes------------------------------
+
     // Manejo de pipe
     int pipe_broker[2];
     if (pipe(pipe_broker) == -1) {
@@ -71,8 +78,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    printf("Main process: Creating broker process\n");
+    // ---------------------Creación de proceso broker-------------------------
 
+    printf("Main process: Creating broker process\n");
     pid_t pid = fork();
 
     if (pid == -1) {
@@ -128,6 +136,8 @@ int main(int argc, char *argv[]) {
         printf("Main process: Waiting for workers\n");
         // Esperar a que el proceso hijo termine
         wait(NULL);
+
+        // ---------------------Clasificación final de la imagen-------------------------
 
         BMPImage *image = read_bmp(bmp_file_name);
         bool classification = is_nearly_black(image, classification_threshold);
