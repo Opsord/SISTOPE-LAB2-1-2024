@@ -15,9 +15,9 @@ int main(int argc, char *argv[]) {
     // Variables para las opciones y sus valores por defecto
     char *prefix_name = NULL;
     int num_filters = 3;
-    float saturation_factor = 1.3;
-    float binarization_threshold = 0.5;
-    float classification_threshold = 0.5;
+    double saturation_factor = 1.3;
+    double binarization_threshold = 0.5;
+    double classification_threshold = 0.5;
     int num_workers = 1;
     char *folder_name = NULL;
     char *csv_file_name = NULL;
@@ -66,8 +66,19 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    // Se agrega la extensión .bmp al nombre del archivo
     char bmp_file_name[256];
     snprintf(bmp_file_name, sizeof(bmp_file_name), "%s.bmp", prefix_name);
+
+    printf("Argumentos:\n");
+    printf("Nombre del archivo BMP: %s\n", bmp_file_name);
+    printf("Número de filtros: %d\n", num_filters);
+    printf("Factor de saturación: %f\n", saturation_factor);
+    printf("Umbral de binarización: %f\n", binarization_threshold);
+    printf("Umbral de clasificación: %f\n", classification_threshold);
+    printf("Número de workers: %d\n", num_workers);
+    printf("Nombre de la carpeta de resultados: %s\n", folder_name);
+    printf("Nombre del archivo CSV: %s\n", csv_file_name);
 
     // ---------------------------Creación de pipes------------------------------
 
@@ -80,7 +91,7 @@ int main(int argc, char *argv[]) {
 
     // ---------------------Creación de proceso broker-------------------------
 
-    printf("Main process: Creating broker process\n");
+    printf("Main process: Creating child process\n");
     pid_t pid = fork();
 
     if (pid == -1) {
@@ -89,6 +100,8 @@ int main(int argc, char *argv[]) {
     }
 
     if (pid == 0) {  // Proceso hijo
+        printf("Child process created\n");
+
         close(pipe_broker[0]);  // Cerrar el extremo de lectura en el hijo
 
         dup2(pipe_broker[1], STDOUT_FILENO);
@@ -105,7 +118,7 @@ int main(int argc, char *argv[]) {
         snprintf(binarization_threshold_str, sizeof(binarization_threshold_str), "%f", binarization_threshold);
         snprintf(num_workers_str, sizeof(num_workers_str), "%d", num_workers);
 
-        printf("Starting broker process\n");
+        printf("Switching to broker process\n");
         execl("./broker", "broker", prefix_name, num_filters, saturation_factor, binarization_threshold, num_workers, NULL);
 
         perror("execl");
