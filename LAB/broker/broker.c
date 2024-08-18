@@ -3,6 +3,9 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "fbroker.h"
 #include "../estructuras.h"
@@ -133,7 +136,20 @@ int main(int argc, char *argv[]) {
             close(fd[i][0]);
             close(fd2[i][1]);
 
-            execl("./worker", "./worker", argv[2], argv[3], argv[4], i, NULL);
+            // Prepare arguments for execv
+            char worker_id_str[12]; // Increased buffer size to accommodate larger integers
+            snprintf(worker_id_str, sizeof(worker_id_str), "%d", i);
+
+            char *worker_argv[] = {
+                    "./worker",
+                    argv[2],
+                    argv[3],
+                    argv[4],
+                    worker_id_str,
+                    NULL
+            };
+
+            execv("./worker", worker_argv);
 
             perror("Error executing worker");
             exit(EXIT_FAILURE);
@@ -174,7 +190,7 @@ int main(int argc, char *argv[]) {
 
     final_image = merge_all(workers, num_workers);
 
-    ssize_t bytes_written = write(STDOUT_FILENO, &final_image, sizeof(OutputImages));
+    ssize_t bytes_written = write(STDOUT_FILENO, final_image, sizeof(OutputImages));
     if (bytes_written != sizeof(OutputImages)) {
         perror("Error writing to stdout");
         free(final_image);
