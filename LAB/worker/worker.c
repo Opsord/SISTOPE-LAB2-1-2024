@@ -51,7 +51,11 @@ int main(int argc, char *argv[]) {
     // Read the image part from stdin (file descriptor 0)
     ssize_t bytes_read = read(STDIN_FILENO, &part, sizeof(BMPImage));
 
-    write_bmp("parte_worker.bmp", &part);
+    char *nombre_archivo = NULL;
+    sprintf(nombre_archivo, "%s%d", "parte_worker_", id);
+    printf("este es el nombre del archivo: %s\n", nombre_archivo);
+    write_bmp(nombre_archivo, &part);
+    //write_bmp("parte_worker.bmp", &part);
 
     Worker result = call_worker(part, id, num_filters, saturation_factor, binarization_threshold);
     printf("Worker: Ancho de la parte: %d\n", part.width);

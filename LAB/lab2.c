@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (pid == 0) {  // Child process
-        printf("Child: Child created\n");
+        printf("Child: Starting (future Broker)\n");
 
         // Close the read end in the child
         close(pipe_broker[0]);
@@ -139,6 +139,8 @@ int main(int argc, char *argv[]) {
             perror("waitpid");
             return 1;
         }
+
+        printf("Main process: Broker finished\n");
 
         // ---------------------Output image processing-------------------------
 
