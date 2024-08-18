@@ -25,7 +25,7 @@ sudo make
 ```bash
 ./LAB2 -N "image" -C supercarpeta -R clasi
 ```
-### O mas compelto
+### O mas completo
 ```bash
 ./LAB2 -N "image" -p 2 -p 1.4 -u 0.6 -v 0.6 -C "supercarpeta" -R "clasi" -w 4
 ```

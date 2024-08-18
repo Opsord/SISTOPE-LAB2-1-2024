@@ -108,10 +108,14 @@ OutputImages *merge_all(Worker *workers, int num_workers) {
 // Funcionamiento: Divide la imagen en partes de igual tamaño (excepto el último)
 // y asigna los datos de píxeles correspondientes a cada parte
 BMPImage *split_columns_2(int num_workers, BMPImage *image) {
-    uint32_t total_width = image->width;
-    uint32_t base_part_width = total_width / num_workers; // Ancho base para cada parte
-    int extra_columns = total_width % num_workers;        // Columnas extras que no se distribuyen equitativamente
 
+    // Save the total width of the image
+    uint32_t total_width = image->width;
+    // Calculate the base width for each part
+    uint32_t base_part_width = total_width / num_workers;
+    // Calculate the extra columns for the last part
+    uint32_t extra_columns = total_width % num_workers;
+    // Allocate memory for the parts
     BMPImage *parts = (BMPImage *)malloc(num_workers * sizeof(BMPImage));
     if (!parts) {
         fprintf(stderr, "Error: Could not allocate memory for parts.\n");
@@ -123,8 +127,11 @@ BMPImage *split_columns_2(int num_workers, BMPImage *image) {
     for (int i = 0; i < num_workers; i++) {
         parts[i].height = image->height;
         // Si es la última parte y hay columnas extras, se añaden a esta parte
-        parts[i].width = (i == num_workers - 1 && extra_columns > 0) ? base_part_width + extra_columns : base_part_width;
-
+        if (i == num_workers - 1 && extra_columns > 0) {
+            parts[i].width = base_part_width + extra_columns;
+        } else {
+            parts[i].width = base_part_width;
+        }
         size_t pixelSize = sizeof(Pixel); // Tamaño de cada píxel
         parts[i].data = (Pixel *)malloc(parts[i].width * parts[i].height * pixelSize);
         if (!parts[i].data) {
@@ -137,7 +144,7 @@ BMPImage *split_columns_2(int num_workers, BMPImage *image) {
         }
 
         // Copiar los datos de píxeles correspondientes a cada parte
-        for (uint32_t y = 0; y < parts[i].height; y++) {
+        for (int y = 0; y < parts[i].height; y++) {
             memcpy(parts[i].data + y * parts[i].width,
                    image->data + y * total_width + current_offset,
                    parts[i].width * pixelSize);

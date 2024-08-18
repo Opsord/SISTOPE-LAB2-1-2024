@@ -41,6 +41,7 @@ add_executable(WORKER
         filtros/filtros.c
         filtros/filtros-aplicados.c
         filtros/filtros.h
+        lectura/lectura.c
 )
 
 # Custom target to compile with debugging information
