@@ -1,59 +1,87 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 #include "../estructuras.h"
 #include "fworker.h"
 
 int main(int argc, char *argv[]) {
 
-    // --------------------------Verificación de argumentos--------------------------
-    if (argc != 6) { // 5 argumentos + puntero null
-        fprintf(stderr, "Uso: %s <num_filters> <saturation_factor> <binarization_threshold>\n", argv[0]);
+    // --------------------------Argument verification--------------------------
+
+    if (argc != 6) { // 5 arguments + null pointer
+        fprintf(stderr, "Usage: %s <num_filters> <saturation_factor> <binarization_threshold> <id>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
-    int num_filters = atoi(argv[1]);
-    float saturation_factor = atof(argv[2]);
-    float binarization_threshold = atof(argv[3]);
-    int id = atoi(argv[4]);
+    char *endptr;
+    errno = 0;
 
-    // --------------------------Configuración de Pipes--------------------------
+    // Convert num_filters
+    int num_filters = strtol(argv[1], &endptr, 10);
+    if (errno != 0 || *endptr != '\0') {
+        perror("Error converting num_filters");
+        exit(EXIT_FAILURE);
+    }
 
-    // Cerrar los extremos no necesarios del pipe (normalmente, el proceso padre configuraría estos)
-    close(STDOUT_FILENO);  // Cerrar la salida estándar del hijo (stdout)
-    close(STDIN_FILENO);   // Cerrar la entrada estándar del hijo (stdin)
+    // Convert saturation_factor
+    float saturation_factor = strtof(argv[2], &endptr);
+    if (errno != 0 || *endptr != '\0') {
+        perror("Error converting saturation_factor");
+        exit(EXIT_FAILURE);
+    }
 
-    // Redirigir la entrada estándar (stdin) al extremo de lectura del pipe
+    // Convert binarization_threshold
+    float binarization_threshold = strtof(argv[3], &endptr);
+    if (errno != 0 || *endptr != '\0') {
+        perror("Error converting binarization_threshold");
+        exit(EXIT_FAILURE);
+    }
+
+    // Convert id
+    int id = strtol(argv[4], &endptr, 10);
+    if (errno != 0 || *endptr != '\0') {
+        perror("Error converting id");
+        exit(EXIT_FAILURE);
+    }
+
+    // --------------------------Pipe configuration--------------------------
+
+    // Close unnecessary pipe ends (normally, the parent process would set these ups)
+    close(STDOUT_FILENO);  // Close the child's stdout
+    close(STDIN_FILENO);   // Close the child's stdin
+
+    // Redirect stdin to the read end of the pipe
     if (dup2(0, STDIN_FILENO) == -1) {
-        perror("Error en dup2 para stdin");
+        perror("Error in dup2 for stdin");
         exit(EXIT_FAILURE);
     }
 
-    // Redirigir la salida estándar (stdout) al extremo de escritura del pipe
+    // Redirect stdout to the writing end of the pipe
     if (dup2(1, STDOUT_FILENO) == -1) {
-        perror("Error en dup2 para stdout");
+        perror("Error in dup2 for stdout");
         exit(EXIT_FAILURE);
     }
 
-    // --------------------------Procesamiento de la Imagen--------------------------
+    // --------------------------Image processing--------------------------
 
     BMPImage part;
 
-    // Leer la parte de la imagen desde stdin
+    // Read the image part from stdin
     ssize_t bytes_read = read(STDIN_FILENO, &part, sizeof(BMPImage));
     if (bytes_read != sizeof(BMPImage)) {
-        perror("Error al leer desde stdin");
+        perror("Error reading from stdin");
         exit(EXIT_FAILURE);
     }
 
-    // Procesar la imagen con los filtros
+    // Process the image with the filters
     Worker worker;
     Worker result = call_worker(part, id, num_filters, saturation_factor, binarization_threshold);
 
-    // Enviar la estructura Worker resultante a stdout
+    // Send the resulting Worker structure to stdout
     ssize_t bytes_written = write(STDOUT_FILENO, &result, sizeof(Worker));
     if (bytes_written != sizeof(Worker)) {
-        perror("Error al escribir en stdout");
+        perror("Error writing to stdout");
         exit(EXIT_FAILURE);
     }
 

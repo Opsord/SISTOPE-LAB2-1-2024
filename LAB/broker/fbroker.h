@@ -3,18 +3,6 @@
 
 #include "../estructuras.h"
 
-// Entrada: Número de partes en las que se dividirá la imagen, imagen original
-// Salida: Arreglo de imágenes divididas
-// Funcionamiento: Divide la imagen en partes de igual tamaño y asigna los datos de píxeles correspondientes a cada parte
-BMPImage *split_columns(int num, BMPImage *image);
-
-
-
-// Entrada: Imagen BMP original, cantidad de workers
-// Salida: Arreglo de workers con las imágenes modificadas
-// Funcionamiento: Divide la imagen en partes y asigna cada parte a un worker
-void divide_image_for_workers(BMPImage *original, int num_workers);
-
 // Entrada: worker A, worker B
 // Salida: Id del worker con el id más bajo
 // Funcionamiento: Compara los id de los workers y retorna el id más bajo
@@ -30,8 +18,5 @@ OutputImages *merge_all(Worker *workers, int num_workers);
 // Funcionamiento: Divide la imagen en partes de igual tamaño (exepto el ultimo)
 // y asigna los datos de píxeles correspondientes a cada parte
 BMPImage *split_columns_2(int num_workers, BMPImage *image);
-
-// No todas las funciones se usan, hay como 3 para dividir la imagen en partes
-// (Borrar las que no se usen y estos comentarios)
 
 #endif // SISTOPE_LAB2_1_2024_FBROKER_H

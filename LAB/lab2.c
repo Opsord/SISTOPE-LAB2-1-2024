@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #include "lectura/lectura.h"
 #include "filtros/filtros.h"
@@ -51,7 +52,7 @@ int main(int argc, char *argv[]) {
                 csv_file_name = optarg;
                 break;
             case 'w':
-                num_workers = atof(optarg);
+                num_workers = atoi(optarg);
                 break;
             default:
                 printf("Invalid option: %c\n", option);
@@ -66,21 +67,10 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // Add a .bmp extension to the file name
+    // Add a .bmp extension to the file name and add "../" at the beginning
     char bmp_file_name[256];
-    snprintf(bmp_file_name, sizeof(bmp_file_name), "%s.bmp", prefix_name);
-
-    /*
-    printf("Arguments:\n");
-    printf("BMP file name: %s\n", bmp_file_name);
-    printf("Number of filters: %d\n", num_filters);
-    printf("Saturation factor: %f\n", saturation_factor);
-    printf("Binarization threshold: %f\n", binarization_threshold);
-    printf("Classification threshold: %f\n", classification_threshold);
-    printf("Number of workers: %d\n", num_workers);
-    printf("Folder name: %s\n", folder_name);
-    printf("CSV file name: %s\n", csv_file_name);
-     */
+    snprintf(bmp_file_name, sizeof(bmp_file_name), "../%s.bmp", prefix_name);
+    // printf("BMP file name: %s\n", bmp_file_name);
 
     // ---------------------------Pipe creation------------------------------
 
@@ -143,8 +133,17 @@ int main(int argc, char *argv[]) {
     } else {  // Parent process
 
         printf("Main process: Handling pipes\n");
-
         close(pipe_broker[1]);  // Close the writing end in the parent
+
+        printf("Main process: Waiting for workers\n");
+        // Wait for the child process to finish
+        int status;
+        if (waitpid(pid, &status, 0) == -1) {
+            perror("waitpid");
+            return 1;
+        }
+
+        // ---------------------Output image processing-------------------------
 
         OutputImages output_images;
 
@@ -175,14 +174,6 @@ int main(int argc, char *argv[]) {
             free_bmp(output_images.binarized);
         } else {
             printf("Binarized image not received\n");
-        }
-
-        printf("Main process: Waiting for workers\n");
-        // Wait for the child process to finish
-        int status;
-        if (waitpid(pid, &status, 0) == -1) {
-            perror("waitpid");
-            return 1;
         }
 
         // ---------------------Final image classification-------------------------
