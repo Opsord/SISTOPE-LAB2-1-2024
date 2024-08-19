@@ -35,8 +35,8 @@ int main(int argc, char *argv[]) {
             case 'f':
                 if (optarg != NULL) {
                     num_filters = atoi(optarg);
-                    break;
                 }
+                break;
             case 'p':
                 saturation_factor = atof(optarg);
                 break;
@@ -71,7 +71,6 @@ int main(int argc, char *argv[]) {
     // Add a .bmp extension to the file name and add "../" at the beginning
     char bmp_file_name[256];
     snprintf(bmp_file_name, sizeof(bmp_file_name), "../%s.bmp", prefix_name);
-    // printf("BMP file name: %s\n", bmp_file_name);
 
     // ---------------------------Pipe creation------------------------------
 
@@ -101,9 +100,6 @@ int main(int argc, char *argv[]) {
         // Close the read end in the child
         close(pipe_broker[0]);
 
-        // dup2(pipe_broker[1], STDOUT_FILENO);
-        close(pipe_broker[1]);
-
         // Convert arguments to strings
         char num_filters_str[10];
         char saturation_factor_str[10];
@@ -117,7 +113,7 @@ int main(int argc, char *argv[]) {
 
         // Prepare arguments for execv
         char *args[] = {
-                "./broker",
+                "BROKER",
                 bmp_file_name,
                 num_filters_str,
                 saturation_factor_str,
@@ -126,18 +122,19 @@ int main(int argc, char *argv[]) {
                 NULL
         };
 
-        // Call the broker process using execv
-        printf("Child: Switching to broker execution\n");
-        execv("./broker", args);
+        // Debug print before execv
+        //printf("Child: Executing broker with args: %s %s %s %s %s %s\n", args[0], args[1], args[2], args[3], args[4], args[5]);
 
-        // Should not reach this point
-        perror("execv");
+        // Call the broker process using execv
+        execv("./BROKER", args);
+
+        // If execv returns, an error occurred
+        perror("Error executing broker");
         exit(EXIT_FAILURE);
 
     } else {  // Parent process
-
-        printf("Main process: Handling pipes\n");
-        close(pipe_broker[1]);  // Close the writing end in the parent
+        // Close the writing end in the parent
+        close(pipe_broker[1]);
 
         printf("Main process: Waiting for broker\n");
         // Wait for the child process to finish

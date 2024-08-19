@@ -1,31 +1,16 @@
-# SISTOPE-LAB1-1-2024
+# SISTOPE-LAB2-1-2024
 Laboratorio de sistemas operativos
 Leer flags y luego la logica de la solucion
 
-## Desde 0
+## Para armar el proyecto
 ```bash
 cd LAB/
-cd build/
-sudo cmake -S ../ -B .
-sudo make
-```
-## Solo compilar
-```bash
-sudo cmake -S ../ -B .
+sudo cmake -S ./ -B build
+cd build
 sudo make
 ```
 
-## Compilar con gdb
+### Para ejecutarlo a modo de prueba con parametros
 ```bash
-sudo cmake -S ../ -B . -DCMAKE_BUILD_TYPE=Debug
-sudo make
-```
-
-## Ejecutar desde carpeta build
-```bash
-./LAB2 -N "image" -C supercarpeta -R clasi
-```
-### O mas completo
-```bash
-./LAB2 -N "image" -p 2 -p 1.4 -u 0.6 -v 0.6 -C "supercarpeta" -R "clasi" -w 4
+./LAB2 -N "image" -p 2 -p 1.4 -u 0.6 -v 0.6 -C "supercarpeta" -R "clasificacion" -w 4
 ```

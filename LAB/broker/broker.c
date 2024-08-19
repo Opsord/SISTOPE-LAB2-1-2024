@@ -116,21 +116,20 @@ int main(int argc, char *argv[]) {
             // Close the reading end of the parent pipe
             close(fd2[i][READ]);
             // Redirect the standard input to the reading end of the child pipe
-            dup2(fd[i][READ], STDIN_FILENO);
+            //dup2(fd[i][READ], STDIN_FILENO);
             // Close the reading end of the child pipe
             close(fd[i][READ]);
             // Redirect the standard output to the writing end of the parent pipe
-            dup2(fd2[i][WRITE], STDOUT_FILENO);
+            //dup2(fd2[i][WRITE], STDOUT_FILENO);
             // Close the writing end of the parent pipe
             close(fd2[i][WRITE]);
-
             // Convert the worker id to a string
             char worker_id_str[12];
             snprintf(worker_id_str, sizeof(worker_id_str), "%d", (i+1));
 
             // Prepare the arguments for the worker
             char *worker_argv[] = {
-                    "./worker",
+                    "WORKER",
                     argv[2],
                     argv[3],
                     argv[4],
@@ -138,8 +137,11 @@ int main(int argc, char *argv[]) {
                     NULL
             };
 
+            // Debug print before execv
+            //printf("Broker: Executing worker with args: %s %s %s %s %s\n", worker_argv[0], worker_argv[1], worker_argv[2], worker_argv[3], worker_argv[4]);
+
             // Execute worker using execv
-            execv("./worker", worker_argv);
+            execv("./WORKER", worker_argv);
             perror("Error executing worker");
             exit(EXIT_FAILURE);
 

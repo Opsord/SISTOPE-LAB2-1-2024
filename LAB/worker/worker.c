@@ -11,7 +11,6 @@ int main(int argc, char *argv[]) {
 
     printf("Worker started\n");
 
-
     // Check the number of arguments
     if (argc != 5) {
         printf("Worker error %d\n", argc);
@@ -48,10 +47,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    printf("Arguments -->  Filters:%d Sat-Factor:%f Bin-Threshold:%f ID:%d\n", num_filters, saturation_factor, binarization_threshold, id);
+    printf("Worker %d -->  Filters:%d Sat-Factor:%f Bin-Threshold:%f\n", id, num_filters, saturation_factor, binarization_threshold);
 
     // Read the image part from stdin
     BMPImage part;
+
+    printf("Worker %d: Before reading STD\n", id);
 
     // Read the image part from stdin (file descriptor 0)
     ssize_t bytes_read = read(STDIN_FILENO, &part, sizeof(BMPImage));
@@ -60,11 +61,15 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    printf("Worker %d: Before writing to file\n", id);
+
     // Write the image part to a file
     char filename[256];
     snprintf(filename, sizeof(filename), "part_worker_%d.bmp", id);
     printf("This is the filename: %s\n", filename);
     write_bmp(filename, &part);
+
+    printf("Worker %d: After writing to file\n", id);
 
     // Apply the filters to the image part
     Worker result = call_worker(part, id, num_filters, saturation_factor, binarization_threshold);
