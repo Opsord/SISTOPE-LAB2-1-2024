@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
     int option;
     printf("Main process: Starting\n");
 
+    // Read the options
     while ((option = getopt(argc, argv, "N:f:p:u:v:C:R:w:")) != -1) {
         switch (option) {
             case 'N':
@@ -83,14 +84,17 @@ int main(int argc, char *argv[]) {
 
     // ---------------------Broker process creation-------------------------
 
+    // Create a child process
     printf("Main process: Creating child process\n");
     pid_t pid = fork();
 
+    // Check if the fork was successful
     if (pid == -1) {
         perror("fork");
         exit(EXIT_FAILURE);
     }
 
+    // Check if the process is the child or the parent
     if (pid == 0) {  // Child process
         printf("Child: Starting (future Broker)\n");
 
@@ -122,11 +126,14 @@ int main(int argc, char *argv[]) {
                 NULL
         };
 
+        // Call the broker process using execv
         printf("Child: Switching to broker execution\n");
         execv("./broker", args);
 
-        perror("execl");
+        // Should not reach this point
+        perror("execv");
         exit(EXIT_FAILURE);
+
     } else {  // Parent process
 
         printf("Main process: Handling pipes\n");
@@ -135,6 +142,7 @@ int main(int argc, char *argv[]) {
         printf("Main process: Waiting for broker\n");
         // Wait for the child process to finish
         int status;
+        // Wait for the child process to finish
         if (waitpid(pid, &status, 0) == -1) {
             perror("waitpid");
             return 1;
@@ -156,43 +164,54 @@ int main(int argc, char *argv[]) {
         close(pipe_broker[0]);  // Close the read descriptor
 
         // Process the received images
+        // Write the images to files
         if (output_images.saturated != NULL) {
             write_bmp("output_saturated.bmp", output_images.saturated);
             free_bmp(output_images.saturated);
         } else {
+            // If the image is NULL, print an error message
             printf("Main process: Saturated image not received\n");
         }
+        // Write the images to files
         if (output_images.grayscale != NULL) {
             write_bmp("output_grayscale.bmp", output_images.grayscale);
             free_bmp(output_images.grayscale);
         } else {
+            // If the image is NULL, print an error message
             printf("Main process: Grayscale image not received\n");
         }
+        // Write the images to files
         if (output_images.binarized != NULL) {
             write_bmp("output_binarized.bmp", output_images.binarized);
             free_bmp(output_images.binarized);
         } else {
+            // If the image is NULL, print an error message
             printf("Main process: Binarized image not received\n");
         }
 
         // ---------------------Final image classification-------------------------
 
+        // Read the final image for classification
         BMPImage *image = read_bmp(bmp_file_name);
         if (image == NULL) {
             printf("Main process: Error reading BMP image for final classification\n");
             return 1;
         }
 
+        // Classify the image
         bool classification = is_nearly_black(image, classification_threshold);
         printf("Main process: Classification: %d\n", classification);
 
+        // ---------------------CSV file creation-------------------------
         if (create_csv(csv_file_name, bmp_file_name, classification) == 1) {
             printf("Main process: Error creating CSV file\n");
         }
 
+        // Free the memory used by the image
         free_bmp(image);
         printf("END\n");
     }
 
+    // Return success
     return 0;
 }

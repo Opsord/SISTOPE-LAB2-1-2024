@@ -5,26 +5,26 @@
 
 #include "resultados.h"
 
-// Entradas: dir - una cadena de caracteres que representa el nombre del directorio a crear
-// Salidas: 0 si el directorio se creó con éxito, 1 si hubo un error
-// Descripción: Esta función intenta crear un nuevo directorio con el nombre especificado.
+// Inputs: dir - a string representing the name of the directory to create
+// Outputs: 0 if the directory was successfully created, 1 if there was an error
+// Description: This function attempts to create a new directory with the specified name.
 int create_directory(const char *dir) {
     if (mkdir(dir, 0777) == -1) {
-        fprintf(stderr, "Error: No se pudo crear el directorio %s.\n", dir);
+        fprintf(stderr, "Error: Could not create directory %s.\n", dir);
         return 1;
     }
     return 0;
 }
 
-// Entradas: filename - una cadena de caracteres que representa el nombre del archivo CSV a crear o modificar
-//           image_name - una cadena de caracteres que representa el nombre de la imagen
-//           classification - un booleano que representa la clasificación de la imagen
-// Salidas: 0 si el archivo CSV se creó o modificó con éxito, 1 si hubo un error
-// Descripción: Esta función intenta abrir el archivo CSV especificado y añadir una nueva línea con el nombre de la imagen y su clasificación.
+// Inputs: filename - a string representing the name of the CSV file to create or modify
+//         image_name - a string representing the name of the image
+//         classification - a boolean representing the classification of the image
+// Outputs: 0 if the CSV file was successfully created or modified, 1 if there was an error
+// Description: This function attempts to open the specified CSV file and add a new line with the image name and its classification.
 int create_csv(const char *filename, const char *image_name, bool classification) {
     FILE *file = fopen(filename, "a");
     if (!file) {
-        fprintf(stderr, "Error: No se pudo abrir el archivo %s.\n", filename);
+        fprintf(stderr, "Error: Could not open file %s.\n", filename);
         return 1;
     }
 

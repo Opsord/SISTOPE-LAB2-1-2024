@@ -3,18 +3,18 @@
 #include "../estructuras.h"
 #include "../worker/fworker.h"
 
-// Entrada: worker A, worker B
-// Salida: Id del worker con el id más bajo
-// Funcionamiento: Compara los id de los workers y retorna el id más bajo
+// Input: worker A, worker B
+// Output: ID of the worker with the lowest ID
+// Functionality: Compares the IDs of the workers and returns the lowest ID
 int compare_worker_id(const void *a, const void *b) {
     Worker *workerA = (Worker *)a;
     Worker *workerB = (Worker *)b;
     return (workerA->id < workerB->id) ? workerA->id : workerB->id;
 }
 
-// Entrada: Arreglo de workers, cantidad de workers, función para obtener la imagen de un worker
-// Salida: Imagen BMP con todas las partes unidas
-// Funcionamiento: Une todas las partes de las imágenes de los workers en una sola imagen para cada filtro
+// Input: Array of workers, number of workers, function to get the image from a worker
+// Output: BMP image with all parts merged
+// Functionality: Merges all parts of the images from the workers into a single image for each filter
 OutputImages *merge_all(Worker *workers, int num_workers) {
     OutputImages *result = (OutputImages *)malloc(sizeof(OutputImages));
     if (!result) {
@@ -22,7 +22,7 @@ OutputImages *merge_all(Worker *workers, int num_workers) {
         return NULL;
     }
 
-    // Inicializar los anchos y altos de cada imagen fusionada
+    // Initialize the widths and heights of each merged image
     result->saturated = (BMPImage *)malloc(sizeof(BMPImage));
     result->grayscale = (BMPImage *)malloc(sizeof(BMPImage));
     result->binarized = (BMPImage *)malloc(sizeof(BMPImage));
@@ -44,14 +44,14 @@ OutputImages *merge_all(Worker *workers, int num_workers) {
     result->grayscale->height = workers[0].grayscale->height;
     result->binarized->height = workers[0].binarized->height;
 
-    // Calcular el ancho total de cada imagen fusionada
+    // Calculate the total width of each merged image
     for (int i = 0; i < num_workers; i++) {
         result->saturated->width += workers[i].saturated->width;
         result->grayscale->width += workers[i].grayscale->width;
         result->binarized->width += workers[i].binarized->width;
     }
 
-    // Asignar memoria para los datos de cada imagen fusionada
+    // Allocate memory for the data of each merged image
     result->saturated->data = (Pixel *)malloc(result->saturated->width * result->saturated->height * sizeof(Pixel));
     result->grayscale->data = (Pixel *)malloc(result->grayscale->width * result->grayscale->height * sizeof(Pixel));
     result->binarized->data = (Pixel *)malloc(result->binarized->width * result->binarized->height * sizeof(Pixel));
@@ -68,10 +68,10 @@ OutputImages *merge_all(Worker *workers, int num_workers) {
         return NULL;
     }
 
-    // Ordenar los workers por id
+    // Sort the workers by ID
     qsort(workers, num_workers, sizeof(Worker), compare_worker_id);
 
-    // Fusión de las imágenes saturadas
+    // Merge the saturated images
     uint32_t current_offset_saturated = 0;
     uint32_t current_offset_grayscale = 0;
     uint32_t current_offset_binarized = 0;
@@ -103,10 +103,10 @@ OutputImages *merge_all(Worker *workers, int num_workers) {
     return result;
 }
 
-// Entrada: Número de partes en las que se dividirá la imagen, imagen original
-// Salida: Arreglo de imágenes divididas
-// Funcionamiento: Divide la imagen en partes de igual tamaño (excepto el último)
-// y asigna los datos de píxeles correspondientes a cada parte
+// Input: Number of parts to split the image into, original image
+// Output: Array of split images
+// Functionality: Splits the image into parts of equal size (except the last one)
+// and assigns the corresponding pixel data to each part
 BMPImage *split_columns_2(int num_workers, BMPImage *image) {
 
     // Save the total width of the image
@@ -122,17 +122,17 @@ BMPImage *split_columns_2(int num_workers, BMPImage *image) {
         return NULL;
     }
 
-    uint32_t current_offset = 0; // Desplazamiento actual para calcular el inicio de cada parte
+    uint32_t current_offset = 0; // Current offset to calculate the start of each part
 
     for (int i = 0; i < num_workers; i++) {
         parts[i].height = image->height;
-        // Si es la última parte y hay columnas extras, se añaden a esta parte
+        // If it is the last part and there are extra columns, add them to this part
         if (i == num_workers - 1 && extra_columns > 0) {
             parts[i].width = base_part_width + extra_columns;
         } else {
             parts[i].width = base_part_width;
         }
-        size_t pixelSize = sizeof(Pixel); // Tamaño de cada píxel
+        size_t pixelSize = sizeof(Pixel); // Size of each pixel
         parts[i].data = (Pixel *)malloc(parts[i].width * parts[i].height * pixelSize);
         if (!parts[i].data) {
             fprintf(stderr, "Error: Could not allocate memory for part data.\n");
@@ -143,14 +143,14 @@ BMPImage *split_columns_2(int num_workers, BMPImage *image) {
             return NULL;
         }
 
-        // Copiar los datos de píxeles correspondientes a cada parte
+        // Copy the corresponding pixel data to each part
         for (int y = 0; y < parts[i].height; y++) {
             memcpy(parts[i].data + y * parts[i].width,
                    image->data + y * total_width + current_offset,
                    parts[i].width * pixelSize);
         }
 
-        current_offset += parts[i].width; // Actualizar el desplazamiento para la siguiente parte
+        current_offset += parts[i].width; // Update the offset for the next part
     }
 
     return parts;

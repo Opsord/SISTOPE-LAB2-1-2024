@@ -3,20 +3,20 @@
 
 #include "../estructuras.h"
 
-// Entrada: worker A, worker B
-// Salida: Id del worker con el id más bajo
-// Funcionamiento: Compara los id de los workers y retorna el id más bajo
+// Input: worker A, worker B
+// Output: ID of the worker with the lowest ID
+// Functionality: Compares the IDs of the workers and returns the lowest ID
 int compare_worker_id(const void *a, const void *b);
 
-// Entrada: Arreglo de workers, cantidad de workers, función para obtener la imagen de un worker
-// Salida: Imagen BMP con todas las partes unidas
-// Funcionamiento: Une todas las partes de las imágenes de los workers en una sola imagen
+// Input: Array of workers, number of workers, function to get the image from a worker
+// Output: BMP image with all parts merged
+// Functionality: Merges all parts of the images from the workers into a single image
 OutputImages *merge_all(Worker *workers, int num_workers);
 
-// Entrada: Número de partes en las que se dividirá la imagen, imagen original
-// Salida: Arreglo de imágenes divididas
-// Funcionamiento: Divide la imagen en partes de igual tamaño (exepto el ultimo)
-// y asigna los datos de píxeles correspondientes a cada parte
+// Input: Number of parts to split the image into, original image
+// Output: Array of split images
+// Functionality: Splits the image into parts of equal size (except the last one)
+// and assigns the corresponding pixel data to each part
 BMPImage *split_columns_2(int num_workers, BMPImage *image);
 
 #endif // SISTOPE_LAB2_1_2024_FBROKER_H

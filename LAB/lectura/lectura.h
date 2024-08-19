@@ -7,19 +7,19 @@
 
 #include "../estructuras.h"
 
-// Entrada: nombre de un archivo BMP
-// Salida: estructura BMPImage con la información de la imagen
-// Funcionamiento: abre el archivo BMP, lee la cabecera y la información de la imagen
+// Input: name of a BMP file
+// Output: BMPImage structure with the image information
+// Functionality: opens the BMP file, reads the header and the image information
 BMPImage *read_bmp(const char *filename);
 
-// Entrada: estructura BMPImage con la información de la imagen
-// Salida: void
-// Funcionamiento: libera la memoria asignada a la estructura BMPImage
+// Input: BMPImage structure with the image information
+// Output: void
+// Functionality: frees the memory allocated to the BMPImage structure
 void free_bmp(BMPImage *image);
 
-// Entrada: nombre de un archivo BMP y una estructura BMPImage con la información de la imagen
-// Salida: void
-// Funcionamiento: escribe la estructura BMPImage en un archivo BMP
+// Input: name of a BMP file and a BMPImage structure with the image information
+// Output: void
+// Functionality: writes the BMPImage structure to a BMP file
 void write_bmp(const char *filename, BMPImage *image);
 
 #endif // LECTURA_H

@@ -3,17 +3,14 @@
 
 #include <stdbool.h>
 
-// Entrada: nombre de un directorio
-// Salida: 0 si el directorio se creó con éxito, 1 si hubo un error
-// Descripción:
-// Esta función intenta crear un nuevo directorio con el nombre especificado.
+// Input: name of a directory
+// Output: 0 if the directory was successfully created, 1 if there was an error
+// Description: This function attempts to create a new directory with the specified name.
 int create_directory(const char *dir);
 
-// Entrada: nombre de un archivo CSV y una cadena de caracteres que representa el nombre de la imagen
-// Salida: 0 si el archivo CSV se creó o modificó con éxito, 1 si hubo un error
-// Descripción:
-// Esta función intenta abrir el archivo CSV especificado y
-// añadir una nueva línea con el nombre de la imagen y su clasificación.
+// Input: name of a CSV file and a string representing the name of the image
+// Output: 0 if the CSV file was successfully created or modified, 1 if there was an error
+// Description: This function attempts to open the specified CSV file and add a new line with the image name and its classification.
 int create_csv(const char *filename, const char *image_name, bool classification);
 
 #endif

@@ -6,8 +6,7 @@
 #include "../estructuras.h"
 #include "../filtros/filtros.h"
 
-// Función para aplicar los filtros a la imagen
-
+// Function to apply filters to the image
 Worker workflow(Worker *worker, int num_filters, float saturation_factor, float binarization_threshold)
 {
     // Split the image into parts
@@ -19,36 +18,36 @@ Worker workflow(Worker *worker, int num_filters, float saturation_factor, float 
     {
         if (i == 0)
         {
-            // Saturación
-            BMPImage *imagen_saturada = saturate_bmp(original, saturation_factor);
-            if (imagen_saturada == NULL)
+            // Saturation
+            BMPImage *saturated_image = saturate_bmp(original, saturation_factor);
+            if (saturated_image == NULL)
             {
-                printf("Error al saturar la imagen\n");
+                printf("Error saturating the image\n");
             }
-            printf("Imagen saturada\n");
-            worker->saturated = imagen_saturada;
+            printf("Saturated image\n");
+            worker->saturated = saturated_image;
         }
         else if (i == 1)
         {
-            // Escala de grises
-            BMPImage *imagen_gris = grayscale_bmp(original);
-            if (imagen_gris == NULL)
+            // Grayscale
+            BMPImage *grayscale_image = grayscale_bmp(original);
+            if (grayscale_image == NULL)
             {
-                printf("Error al convertir a escala de grises\n");
+                printf("Error converting to grayscale\n");
             }
-            printf("Imagen en escala de grises\n");
-            worker->grayscale = imagen_gris;
+            printf("Grayscale image\n");
+            worker->grayscale = grayscale_image;
         }
         else if (i == 2)
         {
-            // Binarización
-            BMPImage *imagen_binaria = binary_bmp(original, binarization_threshold);
-            if (imagen_binaria == NULL)
+            // Binarization
+            BMPImage *binary_image = binary_bmp(original, binarization_threshold);
+            if (binary_image == NULL)
             {
-                printf("Error al binarizar la imagen\n");
+                printf("Error binarizing the image\n");
             }
-            printf("Imagen binarizada\n");
-            worker->binarized = imagen_binaria;
+            printf("Binary image\n");
+            worker->binarized = binary_image;
         }
     }
 
@@ -57,16 +56,15 @@ Worker workflow(Worker *worker, int num_filters, float saturation_factor, float 
 
 Worker call_worker(BMPImage image, int id_worker, int num_filters, float saturation_factor, float binarization_threshold)
 {
-
-    // Primero se crea un worker con el id correspondiente
+    // First, create a worker with the corresponding id
     Worker worker;
     worker.id = id_worker;
-    // Asignamos la imagen a modificar
+    // Assign the image to be modified
     worker.original = &image;
 
-    // Luego se llama a la función pipeline que aplica los filtros a la imagen
+    // Then call the pipeline function that applies the filters to the image
     workflow(&worker, num_filters, saturation_factor, binarization_threshold);
 
-    // Finalmente se retorna el worker con la imagen modificada
+    // Finally, return the worker with the modified image
     return worker;
 }

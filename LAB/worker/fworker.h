@@ -9,10 +9,10 @@
 
 Worker workflow(Worker *worker, int num_filters, float saturation_factor, float binarization_threshold);
 
-// Entrada: Imagen BMP, id del worker, cantidad de filtros, factor de saturación, umbral de binarización
-// Salida: Worker con la imagen modificada
-// Funcionamiento: Crea un worker con el id correspondiente, asigna la imagen a modificar
-// y llama a la función pipeline que aplica los filtros a la imagen
+// Input: BMP Image, worker id, number of filters, saturation factor, binarization threshold
+// Output: Worker with the modified image
+// Functionality: Creates a worker with the corresponding id, assigns the image to be modified
+// and calls the pipeline function that applies the filters to the image
 Worker call_worker(BMPImage image, int id_worker, int num_filters, float saturation_factor, float binarization_threshold);
 
 #endif // SISTOPE_LAB2_1_2024_FWORKER_H
