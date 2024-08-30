@@ -4,10 +4,16 @@
 #include <stdbool.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "lectura/lectura.h"
 #include "filtros/filtros.h"
 #include "resultados/resultados.h"
+
+#define READ 0
+#define WRITE 1
 
 int main(int argc, char *argv[]) {
 
@@ -16,9 +22,9 @@ int main(int argc, char *argv[]) {
     // Variables for options and their default values
     char *prefix_name = NULL;
     int num_filters = 3;
-    float saturation_factor = 1.3;
-    float binarization_threshold = 0.5;
-    float classification_threshold = 0.5;
+    double saturation_factor = 1.3;
+    double binarization_threshold = 0.5;
+    double classification_threshold = 0.5;
     int num_workers = 1;
     char *folder_name = NULL;
     char *csv_file_name = NULL;
@@ -74,11 +80,11 @@ int main(int argc, char *argv[]) {
 
     // ---------------------------Pipe creation------------------------------
 
-    // Pipe handling
-    int pipe_broker[2];
-    if (pipe(pipe_broker) == -1) {
-        perror("PIPE ERROR");
-        return 1;
+    int fd_in[2];
+    int fd_out[2];
+    if (pipe(fd_in) == -1 || pipe(fd_out) == -1) {
+        perror("pipe");
+        exit(EXIT_FAILURE);
     }
 
     // ---------------------Broker process creation-------------------------
@@ -97,19 +103,36 @@ int main(int argc, char *argv[]) {
     if (pid == 0) {  // Child process
         printf("Child: Starting (future Broker)\n");
 
-        // Close the read end in the child
-        close(pipe_broker[0]);
-
-        // Convert arguments to strings
+        // Define the arguments for the execv call
         char num_filters_str[10];
         char saturation_factor_str[10];
         char binarization_threshold_str[10];
         char num_workers_str[10];
-
+        // Convert the arguments to strings
         snprintf(num_filters_str, sizeof(num_filters_str), "%d", num_filters);
         snprintf(saturation_factor_str, sizeof(saturation_factor_str), "%f", saturation_factor);
         snprintf(binarization_threshold_str, sizeof(binarization_threshold_str), "%f", binarization_threshold);
         snprintf(num_workers_str, sizeof(num_workers_str), "%d", num_workers);
+
+        // Close the unused pipe ends
+        close(fd_in[READ]);
+        close(fd_out[WRITE]);
+
+        // Debug print before pipe redirection
+        printf("Child: Redirecting pipes\n");
+
+        // Redirect the standard input and output to the pipe
+        if (dup2(fd_in[WRITE], STDOUT_FILENO) == -1) {
+            perror("dup2");
+            exit(EXIT_FAILURE);
+        }
+        close(fd_in[WRITE]);
+
+        if (dup2(fd_out[READ], STDIN_FILENO) == -1) {
+            perror("dup2");
+            exit(EXIT_FAILURE);
+        }
+        close(fd_out[READ]);
 
         // Prepare arguments for execv
         char *args[] = {
@@ -123,7 +146,7 @@ int main(int argc, char *argv[]) {
         };
 
         // Debug print before execv
-        //printf("Child: Executing broker with args: %s %s %s %s %s %s\n", args[0], args[1], args[2], args[3], args[4], args[5]);
+        // fprintf(stderr, "Child: Executing broker with args: %s %s %s %s %s %s\n", args[0], args[1], args[2], args[3], args[4], args[5]);
 
         // Call the broker process using execv
         execv("./BROKER", args);
@@ -133,10 +156,18 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
 
     } else {  // Parent process
-        // Close the writing end in the parent
-        close(pipe_broker[1]);
 
-        printf("Main process: Waiting for broker\n");
+        close(fd_in[WRITE]);
+        close(fd_out[READ]);
+
+        //  ---------------------Receive images from the broker-------------------------
+
+        OutputImages output_images;
+
+        // Read the images from the pipe
+
+
+        printf("Main process: Waiting for broker to finish\n");
         // Wait for the child process to finish
         int status;
         // Wait for the child process to finish
@@ -145,20 +176,9 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
-        printf("Main process: Broker finished\n");
+        fprintf(stderr, "Main process: Broker finished\n");
 
         // ---------------------Output image processing-------------------------
-
-        OutputImages output_images;
-
-        // Read the OutputImages structure from the pipe
-        if (read(pipe_broker[0], &output_images, sizeof(OutputImages)) == -1) {
-            perror("read");
-            close(pipe_broker[0]);
-            return 1;
-        }
-
-        close(pipe_broker[0]);  // Close the read descriptor
 
         // Process the received images
         // Write the images to files

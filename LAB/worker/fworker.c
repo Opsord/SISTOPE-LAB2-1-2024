@@ -24,7 +24,7 @@ Worker workflow(Worker *worker, int num_filters, float saturation_factor, float 
             {
                 printf("Error saturating the image\n");
             }
-            printf("Saturated image\n");
+            fprintf(stderr,"Image saturated correctly\n");
             worker->saturated = saturated_image;
         }
         else if (i == 1)

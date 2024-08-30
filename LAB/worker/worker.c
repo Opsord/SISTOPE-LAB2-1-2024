@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-
 #include "fworker.h"
-#include "../estructuras.h"
 #include "../lectura/lectura.h"
 
 int main(int argc, char *argv[]) {
 
-    printf("Worker started\n");
+    // ------------------------Argument validation------------------------
+
+    fprintf(stderr, "Worker %s: Starting\n", argv[4]);
 
     // Check the number of arguments
     if (argc != 5) {
@@ -28,31 +28,33 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // Convert the arguments to the correct type
     float saturation_factor = strtof(argv[2], &endptr);
-    if (errno != 0 || *endptr != '\0') { // Check if the conversion was successful
+    if (errno != 0 || *endptr != '\0') {
         perror("Error converting saturation_factor");
         exit(EXIT_FAILURE);
     }
 
     float binarization_threshold = strtof(argv[3], &endptr);
-    if (errno != 0 || *endptr != '\0') { // Check if the conversion was successful
+    if (errno != 0 || *endptr != '\0') {
         perror("Error converting binarization_threshold");
         exit(EXIT_FAILURE);
     }
 
     int id = strtol(argv[4], &endptr, 10);
-    if (errno != 0 || *endptr != '\0') { // Check if the conversion was successful
+    if (errno != 0 || *endptr != '\0') {
         perror("Error converting id");
         exit(EXIT_FAILURE);
     }
 
-    printf("Worker %d -->  Filters:%d Sat-Factor:%f Bin-Threshold:%f\n", id, num_filters, saturation_factor, binarization_threshold);
+    // Debug print
+    //printf("Worker %d -->  Filters:%d Sat-Factor:%f Bin-Threshold:%f\n", id, num_filters, saturation_factor, binarization_threshold);
+
+    // -------------------------Image processing-------------------------
 
     // Read the image part from stdin
     BMPImage part;
 
-    printf("Worker %d: Before reading STD\n", id);
+    fprintf(stderr, "Worker %d: Before reading STD\n", id);
 
     // Read the image part from stdin (file descriptor 0)
     ssize_t bytes_read = read(STDIN_FILENO, &part, sizeof(BMPImage));
@@ -61,24 +63,16 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    printf("Worker %d: Before writing to file\n", id);
-
-    // Write the image part to a file
-    char filename[256];
-    snprintf(filename, sizeof(filename), "part_worker_%d.bmp", id);
-    printf("This is the filename: %s\n", filename);
-    write_bmp(filename, &part);
-
-    printf("Worker %d: After writing to file\n", id);
+    fprintf(stderr, "Worker %d: After reading STD\n", id);
 
     // Apply the filters to the image part
     Worker result = call_worker(part, id, num_filters, saturation_factor, binarization_threshold);
-    printf("Worker: Part width: %d\n", part.width);
-    printf("Worker: Part height: %d\n", part.height);
+    fprintf(stderr,"Worker: Part width: %d\n", part.width);
+    fprintf(stderr,"Worker: Part height: %d\n", part.height);
 
-    printf("Worker ID: %d\n", id);
-    printf("Width: %d\n", result.original->width);
-    printf("Height: %d\n", result.original->height);
+    fprintf(stderr,"Worker ID: %d\n", id);
+    fprintf(stderr,"Width: %d\n", result.original->width);
+    fprintf(stderr,"Height: %d\n", result.original->height);
 
     // Write the modified image to a file
     write_bmp("testworker.bmp", result.original);

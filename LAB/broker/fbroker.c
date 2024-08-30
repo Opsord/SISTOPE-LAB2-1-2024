@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+
 #include "../estructuras.h"
 #include "../worker/fworker.h"
 
@@ -13,7 +14,7 @@ int compare_worker_id(const void *a, const void *b) {
 }
 
 // Input: Array of workers, number of workers, function to get the image from a worker
-// Output: BMP image with all parts merged
+// Output: BMP image with all the parts merged
 // Functionality: Merges all parts of the images from the workers into a single image for each filter
 OutputImages *merge_all(Worker *workers, int num_workers) {
     OutputImages *result = (OutputImages *)malloc(sizeof(OutputImages));
