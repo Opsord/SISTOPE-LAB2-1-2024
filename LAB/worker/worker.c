@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Debug print
-    //printf("Worker %d -->  Filters:%d Sat-Factor:%f Bin-Threshold:%f\n", id, num_filters, saturation_factor, binarization_threshold);
+    fprintf(stderr,"Worker %d -->  Filters:%d Sat-Factor:%f Bin-Threshold:%f\n", id, num_filters, saturation_factor, binarization_threshold);
 
     // -------------------------Image processing-------------------------
 

@@ -54,17 +54,37 @@ Worker workflow(Worker *worker, int num_filters, float saturation_factor, float 
     return *worker;
 }
 
-Worker call_worker(BMPImage image, int id_worker, int num_filters, float saturation_factor, float binarization_threshold)
-{
-    // First, create a worker with the corresponding id
+Worker call_worker(BMPImage image, int id_worker, int num_filters, float saturation_factor, float binarization_threshold) {
     Worker worker;
     worker.id = id_worker;
-    // Assign the image to be modified
     worker.original = &image;
+    fprintf(stderr, "Worker %d: Starting call\n", id_worker);
 
-    // Then call the pipeline function that applies the filters to the image
-    workflow(&worker, num_filters, saturation_factor, binarization_threshold);
+    for (int i = 0; i < num_filters; i++) {
+        switch (i) {
+            case 0:
+                worker.saturated = saturate_bmp(worker.original, saturation_factor);
+                if (worker.saturated == NULL) {
+                    fprintf(stderr, "Error saturating the image\n");
+                }
+                break;
+            case 1:
+                worker.grayscale = grayscale_bmp(worker.original);
+                if (worker.grayscale == NULL) {
+                    fprintf(stderr, "Error converting to grayscale\n");
+                }
+                break;
+            case 2:
+                worker.binarized = binary_bmp(worker.original, binarization_threshold);
+                if (worker.binarized == NULL) {
+                    fprintf(stderr, "Error binarizing the image\n");
+                }
+                break;
+            default:
+                fprintf(stderr, "Invalid filter index: %d\n", i);
+                break;
+        }
+    }
 
-    // Finally, return the worker with the modified image
     return worker;
 }

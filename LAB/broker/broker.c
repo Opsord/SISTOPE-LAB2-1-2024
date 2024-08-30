@@ -100,6 +100,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    //
+    //fprintf(stderr, "Broker: %i  \n, sizeof(parts) %llu\n", num_workers, sizeof(parts));
+
     // ---------------------Worker management-------------------------
 
     // Array of pids for the workers
@@ -151,6 +154,9 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
 
         } else if (pid > 0) { // Parent process case
+
+            // Write the image part to the worker
+            ssize_t bytes_written = write(fd_in[i][WRITE], &parts[i], sizeof(BMPImage));
 
             // Close the reading end of the child pipe
             close(fd_in[i][READ]);
