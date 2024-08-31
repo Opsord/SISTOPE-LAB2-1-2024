@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include "fworker.h"
+#include "../lectura/lectura.h"
 
 int main(int argc, char *argv[])
 {
@@ -58,7 +59,6 @@ int main(int argc, char *argv[])
 
     // Read the image part from stdin
     BMPImage *part = (BMPImage *)malloc(sizeof(BMPImage));
-    part->data = (Pixel *)calloc(1000, sizeof(Pixel));
     // Read the image part from stdin (file descriptor 0)
     ssize_t bytes_read = read(STDIN_FILENO, part, sizeof(BMPImage));
     if (bytes_read != sizeof(BMPImage))
@@ -68,6 +68,7 @@ int main(int argc, char *argv[])
     }
     fprintf(stderr, "Worker: Part width: %d\n", part->width);
     fprintf(stderr, "Worker: Part height: %d\n", part->height);
+    fprintf(stderr, "Worker: Part pixel example %d\n", part->data->r);
 
     // Apply the filters to the image part
     Worker *result = call_worker(part, id, num_filters, saturation_factor, binarization_threshold);
@@ -75,6 +76,9 @@ int main(int argc, char *argv[])
     fprintf(stderr, "Worker ID: %d\n", id);
     fprintf(stderr, "Width: %d\n", result->original->width);
     fprintf(stderr, "Height: %d\n", result->original->height);
+
+    // Make a file with the modified image
+    write_bmp("output_worker.bmp", result->original);
 
     // Write the modified image to stdout
     ssize_t bytes_written = write(STDOUT_FILENO, result, sizeof(Worker));

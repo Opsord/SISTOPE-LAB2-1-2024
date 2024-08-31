@@ -53,7 +53,7 @@ add_custom_target(debug
 
 # Custom target to run gdb
 add_custom_target(gdb
-        COMMAND gdb ./
+        COMMAND gdb --args ./LAB2 -N "image" -p 2 -p 1.4 -u 0.6 -v 0.6 -C "supercarpeta" -R "clasificacion" -w 4
         DEPENDS LAB2
         COMMENT "Running gdb on broker"
 )

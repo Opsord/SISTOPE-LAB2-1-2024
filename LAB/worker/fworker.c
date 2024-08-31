@@ -54,11 +54,26 @@ Worker workflow(Worker *worker, int num_filters, float saturation_factor, float 
     return *worker;
 }
 
+#include "fworker.h"
+#include "../estructuras.h"
+#include "../filtros/filtros.h"
+
 Worker *call_worker(BMPImage *image, int id_worker, int num_filters, float saturation_factor, float binarization_threshold)
 {
-    Worker *worker = (Worker *)malloc(sizeof(Worker *));
+    // Asignar memoria para un Worker completo
+    Worker *worker = (Worker *)malloc(sizeof(Worker));
+    if (worker == NULL)
+    {
+        fprintf(stderr, "Error allocating memory for worker\n");
+        return NULL;
+    }
+
     worker->id = id_worker;
     worker->original = image;
+    worker->saturated = NULL;
+    worker->grayscale = NULL;
+    worker->binarized = NULL;
+
     fprintf(stderr, "Worker %d: Starting call\n", id_worker);
 
     for (int i = 0; i < num_filters; i++)
@@ -69,7 +84,7 @@ Worker *call_worker(BMPImage *image, int id_worker, int num_filters, float satur
             fprintf(stderr, "Image width: %d\n", worker->original->width);
             fprintf(stderr, "Image height: %d\n", worker->original->height);
 
-                        worker->saturated = saturate_bmp(worker->original, saturation_factor);
+            worker->saturated = saturate_bmp(worker->original, saturation_factor);
             fprintf(stderr, "Saturating the image\n");
 
             if (worker->saturated == NULL)
