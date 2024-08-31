@@ -13,6 +13,6 @@ Worker workflow(Worker *worker, int num_filters, float saturation_factor, float 
 // Output: Worker with the modified image
 // Functionality: Creates a worker with the corresponding id, assigns the image to be modified
 // and calls the pipeline function that applies the filters to the image
-Worker call_worker(BMPImage image, int id_worker, int num_filters, float saturation_factor, float binarization_threshold);
+Worker *call_worker(BMPImage *image, int id_worker, int num_filters, float saturation_factor, float binarization_threshold);
 
 #endif // SISTOPE_LAB2_1_2024_FWORKER_H

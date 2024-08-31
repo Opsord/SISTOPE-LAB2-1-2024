@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <ctype.h>
 
 #include "lectura/lectura.h"
 #include "filtros/filtros.h"
@@ -40,17 +41,40 @@ int main(int argc, char *argv[]) {
                 break;
             case 'f':
                 if (optarg != NULL) {
-                    num_filters = atoi(optarg);
+                    if (optarg>0){
+                        num_filters = atoi(optarg);
+                    }
+                    else{
+                        printf("Argumento inválido - ERROR\n");
+                        exit(0);
+                    }
                 }
                 break;
             case 'p':
-                saturation_factor = atof(optarg);
+                if(isdigit(atof(optarg)) || atof(optarg)>0){
+                    saturation_factor = atof(optarg);
+                }
+                else{
+                    printf("Argumento inválido - ERROR\n");
+                    exit(0);
+                }
                 break;
             case 'u':
-                binarization_threshold = atof(optarg);
+                if (isdigit(atof(optarg)) || atof(optarg)>0){
+                    binarization_threshold = atof(optarg);
+                }
+                else{
+                    printf("Argumento inválido - ERROR\n");
+                }
                 break;
             case 'v':
-                classification_threshold = atof(optarg);
+                if (isdigit(atof(optarg)) || atof(optarg)>0){
+                    classification_threshold = atof(optarg);
+                }
+                else{
+                    printf("Argumento inválido - ERROR\n");
+                    exit(0);
+                }
                 break;
             case 'C':
                 folder_name = optarg;
@@ -59,13 +83,20 @@ int main(int argc, char *argv[]) {
                 csv_file_name = optarg;
                 break;
             case 'w':
-                num_workers = atoi(optarg);
+                if (isdigit(atof(optarg)) || atof(optarg)>0){
+                    num_workers = atoi(optarg);
+                }
+                else{
+                    printf("Argumento inválido - ERROR\n");
+                    exit(0);
+                }
                 break;
             default:
                 printf("Invalid option: %c\n", option);
                 return 1;
         }
     }
+
 
     // ---------------------Argument verification-------------------------
 

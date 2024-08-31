@@ -17,6 +17,6 @@ OutputImages *merge_all(Worker *workers, int num_workers);
 // Output: Array of split images
 // Functionality: Splits the image into parts of equal size (except the last one)
 // and assigns the corresponding pixel data to each part
-BMPImage *split_columns_2(int num_workers, BMPImage *image);
+BMPImage **split_columns_2(int num_workers, BMPImage *image);
 
 #endif // SISTOPE_LAB2_1_2024_FBROKER_H
